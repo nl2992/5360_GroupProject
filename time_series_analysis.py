@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import stats
 
 def push_response_test(price,tau=10,n_bins=50):
     """
