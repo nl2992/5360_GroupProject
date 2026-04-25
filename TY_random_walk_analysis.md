@@ -39,8 +39,7 @@ We evaluate multiple time scales measured in 5-minute bars. The following table 
 | 48               | 4 hours    | ~0.947        | +        | Mixed evidence |
 | 192              | 16 hours   | ~0.944        | −        | Mean-reversion |
 | 384              | 32 hours   | ~0.926        | −        | Stronger mean-reversion |
-| 768–1152         | 2–4 days   | ~0.89–0.90    | ++       | Mixed evidence / PR-only trend-following signal |
-
+| 768–1152         | 2–4 days   | ~0.89–0.90    | ++       | Trend-following evidence (PR-driven, VR < 1) |
 ---
 
 ## Interpretation
@@ -51,7 +50,7 @@ At short horizons (e.g., 30 minutes), the market behaves close to a random walk,
 
 At intermediate horizons (approximately 16 to 32 hours), both the Variance Ratio and Push-Response tests consistently indicate **mean-reversion**. This suggests that price movements at these time scales tend to reverse rather than continue. The Variance Ratio is generally below one, and for several intermediate scales, the deviations are statistically significant at conventional levels.
 
-At longer horizons (multi-day scale), the Push-Response slope becomes positive, indicating potential trend-following behavior. However, the Variance Ratio remains below one, which does not support strong positive serial dependence. Therefore, the evidence at long horizons should be interpreted as **mixed rather than conclusive**.
+At longer horizons (multi-day scale), the Push-Response slope becomes positive, indicating potential trend-following behavior. However, the Variance Ratio remains below one, which does not support strong positive serial dependence. Therefore, the evidence at long horizons suggests some trend-following behavior based on the Push-Response test, although the Variance Ratio remains below one, so the result should be interpreted with caution.
 
 The strongest evidence of inefficiency appears at intermediate time scales (approximately 16 to 32 hours), where both tests consistently indicate mean-reversion.
 
