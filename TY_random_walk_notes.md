@@ -19,3 +19,5 @@ To run the code, place `TY-5minHLV.csv` in the same folder as `random_walk_TY.py
 ```bash
 python random_walk_TY.py
 ```
+
+For result interpretation, see `TY_random_walk_analysis.md`.
