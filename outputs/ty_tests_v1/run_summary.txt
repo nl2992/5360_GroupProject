@@ -1,0 +1,7 @@
+input_csv: /Users/maggiezhu/Downloads/TY-5minHLV.csv
+n_close: 863887
+horizons_tested: 11
+vr_lt_1_count: 10
+vr_gt_1_count: 0
+push_slope_pos_count: 4
+push_slope_neg_count: 7
