@@ -8,8 +8,9 @@
 #include<numeric>
 #include<deque>
 #include<stdexcept>
+#include <iomanip>
 #include<algorithm>
-
+#include <omp.h>
 
 using namespace std;
 
@@ -256,219 +257,638 @@ void writeEquityCSV(
     }
 }
 
-int main() {
-    try {
-        string dataFile = "HO-5minHLV.csv";
+//Walking forward functions
+string addMonthsDate(const string& dateStr, int monthsToAdd) {
+    int y = 0, m = 0, d = 0;
 
-        int barsBack = 17001;
-        double slpg = 47.0;
-        double PV = 42000.0;
-        double E0 = 100000.0;
-
-        vector<int> Length = {12700};
-        vector<double> StopPct = {0.010};
-
-        vector<Bar> d = readCSV(dataFile);
-        int N = static_cast<int>(d.size());
-
-        cout << "Loaded bars: " << N << endl;
-
-        // 简化版时间比较
-        double inSampleStart  = parseDataTimeTonumeric("01/01/1980", "00:00:00");
-        double inSampleEnd    = parseDataTimeTonumeric("01/01/2000", "00:00:00");
-        double outSampleStart = parseDataTimeTonumeric("01/01/2000", "00:00:00");
-        double outSampleEnd   = parseDataTimeTonumeric("03/23/2023", "00:00:00");
-
-        int indInSample1  = max(firstIndexGE(d, inSampleStart), barsBack);
-        int indInSample2  = max(lastIndexLT(d, inSampleEnd + 1.0), barsBack);
-
-        int indOutSample1 = max(firstIndexGE(d, outSampleStart), barsBack);
-        int indOutSample2 = max(lastIndexLT(d, outSampleEnd + 1.0), barsBack);
-
-        for (int i = 0; i < static_cast<int>(Length.size()); ++i) {
-            int L = Length[i];
-            cout << "calculating for Length = " << L << endl;
-
-            if (L <= 0) {
-                throw runtime_error("Length must be positive.");
-            }
-            if (barsBack < L) {
-                throw runtime_error("barsBack must be >= L.");
-            }
-
-            vector<double> HH(N, 0.0), LL(N, 0.0);
-
-            // -------- O(N) 单调队列计算 HH / LL --------
-            deque<int> maxQ;  // high: 单调递减
-            deque<int> minQ;  // low : 单调递增
-
-            for (int k = barsBack; k < N; ++k) {
-                int newIdx = k - 1;   // 新进入窗口的元素
-                int leftIdx = k - L;  // 窗口左边界，窗口是 [k-L, k-1]
-
-                // 更新 maxQ: high 单调递减
-                while (!maxQ.empty() && d[maxQ.back()].high <= d[newIdx].high) {
-                    maxQ.pop_back();
-                }
-                maxQ.push_back(newIdx);
-
-                // 删除滑出窗口的元素
-                while (!maxQ.empty() && maxQ.front() < leftIdx) {
-                    maxQ.pop_front();
-                }
-
-                // 更新 minQ: low 单调递增
-                while (!minQ.empty() && d[minQ.back()].low >= d[newIdx].low) {
-                    minQ.pop_back();
-                }
-                minQ.push_back(newIdx);
-
-                // 删除滑出窗口的元素
-                while (!minQ.empty() && minQ.front() < leftIdx) {
-                    minQ.pop_front();
-                }
-
-                HH[k] = d[maxQ.front()].high;
-                LL[k] = d[minQ.front()].low;
-            }
-
-            for (int j = 0; j < static_cast<int>(StopPct.size()); ++j) {
-                double S = StopPct[j];
-
-                int position = 0;
-                double benchmarkLong = NaN;
-                double benchmarkShort = NaN;
-
-                vector<double> E(N, E0);
-                vector<double> DD(N, 0.0);
-                vector<double> trades(N, 0.0);
-
-                double Emax = E0;
-
-                for (int k = barsBack; k < N; ++k) {
-                    bool traded = false;
-                    double delta = 0.0;
-
-                    if (k > 0) {
-                        delta = PV * (d[k].close - d[k - 1].close) * position;
-                    }
-
-                    if (position == 0) {
-                        bool buy = d[k].high >= HH[k];
-                        bool sell = d[k].low <= LL[k];
-
-                        if (buy && sell) {
-                            delta = -slpg + PV * (LL[k] - HH[k]);
-                            trades[k] = 1.0;
-                        } else {
-                            if (buy) {
-                                delta = -slpg / 2.0 + PV * (d[k].close - HH[k]);
-                                position = 1;
-                                traded = true;
-                                benchmarkLong = d[k].high;
-                                trades[k] = 0.5;
-                            }
-                            if (sell) {
-                                delta = -slpg / 2.0 - PV * (d[k].close - LL[k]);
-                                position = -1;
-                                traded = true;
-                                benchmarkShort = d[k].low;
-                                trades[k] = 0.5;
-                            }
-                        }
-                    }
-
-                    if (position == 1 && !traded) {
-                        bool sellShort = d[k].low <= LL[k];
-                        bool sell = d[k].low <= (benchmarkLong * (1.0 - S));
-
-                        if (sellShort && sell) {
-                            delta = delta - slpg - 2.0 * PV * (d[k].close - LL[k]);
-                            position = -1;
-                            benchmarkShort = d[k].low;
-                            trades[k] = 1.0;
-                        } else {
-                            if (sell) {
-                                delta = delta - slpg / 2.0
-                                      - PV * (d[k].close - (benchmarkLong * (1.0 - S)));
-                                position = 0;
-                                trades[k] = 0.5;
-                            }
-
-                            if (sellShort) {
-                                delta = delta - slpg - 2.0 * PV * (d[k].close - LL[k]);
-                                position = -1;
-                                benchmarkShort = d[k].low;
-                                trades[k] = 1.0;
-                            }
-                        }
-
-                        benchmarkLong = max(d[k].high, benchmarkLong);
-                    }
-
-                    if (position == -1 && !traded) {
-                        bool buyLong = d[k].high >= HH[k];
-                        bool buy = d[k].high >= (benchmarkShort * (1.0 + S));
-
-                        if (buyLong && buy) {
-                            delta = delta - slpg + 2.0 * PV * (d[k].close - HH[k]);
-                            position = 1;
-                            benchmarkLong = d[k].high;
-                            trades[k] = 1.0;
-                        } else {
-                            if (buy) {
-                                delta = delta - slpg / 2.0
-                                      + PV * (d[k].close - (benchmarkShort * (1.0 + S)));
-                                position = 0;
-                                trades[k] = 0.5;
-                            }
-
-                            if (buyLong) {
-                                delta = delta - slpg + 2.0 * PV * (d[k].close - HH[k]);
-                                position = 1;
-                                benchmarkLong = d[k].high;
-                                trades[k] = 1.0;
-                            }
-                        }
-
-                        benchmarkShort = min(d[k].low, benchmarkShort);
-                    }
-
-                    E[k] = (k > 0 ? E[k - 1] : E0) + delta;
-                    Emax = max(Emax, E[k]);
-                    DD[k] = E[k] - Emax;
-                }
-
-                ResultStats inRes =
-                    computeStats(E, DD, trades, indInSample1, indInSample2, barsBack);
-
-                ResultStats outRes =
-                    computeStats(E, DD, trades, indOutSample1, indOutSample2, barsBack);
-                writePriceCSV(
-                    "price_plot.csv",d,HH,LL,trades,indOutSample1,indOutSample2);
-                writeEquityCSV("equity_plot.csv",d,E,indOutSample1,indOutSample2);
-
-                cout << "S = " << S
-                     << " | in-sample: "
-                     << inRes.profit << ", "
-                     << inRes.worstDrawdown << ", "
-                     << inRes.pnlStd << ", "
-                     << inRes.numTrades
-                     << " | out-sample: "
-                     << outRes.profit << ", "
-                     << outRes.worstDrawdown << ", "
-                     << outRes.pnlStd << ", "
-                     << outRes.numTrades
-                     << endl;
-            }
-        }
-    } catch (const exception& e) {
-        cerr << "Error: " << e.what() << endl;
+    if (dateStr.find('-') != string::npos) {
+        char dash1, dash2;
+        stringstream ss(dateStr);
+        ss >> y >> dash1 >> m >> dash2 >> d;
+    } else if (dateStr.find('/') != string::npos) {
+        char slash1, slash2;
+        stringstream ss(dateStr);
+        ss >> m >> slash1 >> d >> slash2 >> y;
+    } else {
+        throw runtime_error("Unsupported date format: " + dateStr);
     }
 
-    return 0;
+    m += monthsToAdd;
+
+    while (m > 12) {
+        m -= 12;
+        y += 1;
+    }
+
+    while (m <= 0) {
+        m += 12;
+        y -= 1;
+    }
+
+    stringstream out;
+    out << setw(2) << setfill('0') << m << "/"
+        << setw(2) << setfill('0') << d << "/"
+        << y;
+
+    return out.str();
 }
 
 
 
+int main() {
 
+    try {
+
+        string dataFile = "HO-5minHLV.csv";
+
+        double slpg = 47.0;
+
+        double PV = 42000.0;
+
+        double E0 = 100000.0;
+
+        // ----------------------------
+
+        // Parameter grid
+
+        // ----------------------------
+
+        vector<int> Length;
+
+        for (int L = 500; L <= 10000; L += 20) {
+
+            Length.push_back(L);
+
+        }
+
+        vector<double> StopPct;
+
+        for (int i = 5; i <= 100; i += 5) {
+
+            StopPct.push_back(i / 1000.0);
+
+        }
+
+        // ----------------------------
+
+        // Load data
+
+        // ----------------------------
+
+        vector<Bar> d = readCSV(dataFile);
+
+        int N = static_cast<int>(d.size());
+
+        cout << "Loaded bars: " << N << endl;
+
+        if (N == 0) {
+
+            throw runtime_error("No data loaded.");
+
+        }
+
+        cout << "OpenMP max threads: " << omp_get_max_threads() << endl;
+
+        string globalStartDate = d.front().dateStr;
+
+        string globalEndDate = d.back().dateStr;
+
+        // ----------------------------
+
+        // Walk-forward setup
+
+        // ----------------------------
+
+        int inSampleMonths = 48;   // 4 years
+
+        int outSampleMonths = 6;   // 6 months
+
+        int stepMonths = 48;       // update every 4 years
+
+        ofstream resultOut("walk_forward_4y_update_results.csv");
+
+        if (!resultOut.is_open()) {
+
+            throw runtime_error("Cannot open result output file.");
+
+        }
+
+        resultOut << "InStart,InEnd,OutStart,OutEnd,"
+
+                  << "BestLength,BestStopPct,"
+
+                  << "InProfit,InWorstDD,InStd,InTrades,"
+
+                  << "OutProfit,OutWorstDD,OutStd,OutTrades\n";
+
+        string inStartDate = globalStartDate;
+
+        // ----------------------------
+
+        // Walk-forward loop
+
+        // ----------------------------
+
+        while (true) {
+
+            string inEndDate = addMonthsDate(inStartDate, inSampleMonths);
+
+            string outStartDate = inEndDate;
+
+            string outEndDate = addMonthsDate(outStartDate, outSampleMonths);
+
+            double globalEndNum = parseDataTimeTonumeric(globalEndDate, "00:00:00");
+
+            double outEndNum = parseDataTimeTonumeric(outEndDate, "00:00:00");
+
+            if (outEndNum > globalEndNum) {
+
+                break;
+
+            }
+
+            double inSampleStart = parseDataTimeTonumeric(inStartDate, "00:00:00");
+
+            double inSampleEnd = parseDataTimeTonumeric(inEndDate, "00:00:00");
+
+            double outSampleStart = parseDataTimeTonumeric(outStartDate, "00:00:00");
+
+            double outSampleEnd = parseDataTimeTonumeric(outEndDate, "00:00:00");
+
+            int indInSample1Raw = firstIndexGE(d, inSampleStart);
+
+            int indInSample2Raw = lastIndexLT(d, inSampleEnd);
+
+            int indOutSample1Raw = firstIndexGE(d, outSampleStart);
+
+            int indOutSample2Raw = lastIndexLT(d, outSampleEnd);
+
+            if (indInSample1Raw < 0 || indInSample2Raw < 0 ||
+
+                indOutSample1Raw < 0 || indOutSample2Raw < 0) {
+
+                inStartDate = addMonthsDate(inStartDate, stepMonths);
+
+                continue;
+
+            }
+
+            cout << "\nWindow: "
+
+                 << inStartDate << " to " << inEndDate
+
+                 << " | OOS: "
+
+                 << outStartDate << " to " << outEndDate
+
+                 << endl;
+
+            // Global best for this walk-forward window
+
+            double bestScore = -1e100;
+
+            int bestL = -1;
+
+            double bestS = 0.0;
+
+            ResultStats bestInRes{};
+
+            ResultStats bestOutRes{};
+
+            // ============================================================
+
+            // Parallel search over Length
+
+            // ============================================================
+
+            #pragma omp parallel
+
+            {
+
+                double localBestScore = -1e100;
+
+                int localBestL = -1;
+
+                double localBestS = 0.0;
+
+                ResultStats localBestInRes{};
+
+                ResultStats localBestOutRes{};
+
+                #pragma omp for schedule(dynamic)
+
+                for (int i = 0; i < static_cast<int>(Length.size()); ++i) {
+
+                    int L = Length[i];
+
+                    int warmup = L;
+
+                    int indInSample1 = max(indInSample1Raw, warmup);
+
+                    int indInSample2 = indInSample2Raw;
+
+                    int indOutSample1 = max(indOutSample1Raw, warmup);
+
+                    int indOutSample2 = indOutSample2Raw;
+
+                    if (indInSample1 > indInSample2 || indOutSample1 > indOutSample2) {
+
+                        continue;
+
+                    }
+
+                    // ----------------------------
+
+                    // Compute HH / LL for this Length
+
+                    // ----------------------------
+
+                    vector<double> HH(N, 0.0);
+
+                    vector<double> LL(N, 0.0);
+
+                    deque<int> maxQ;
+
+                    deque<int> minQ;
+
+                    for (int k = warmup; k <= indOutSample2; ++k) {
+
+                        int newIdx = k - 1;
+
+                        int leftIdx = k - L;
+
+                        while (!maxQ.empty() && d[maxQ.back()].high <= d[newIdx].high) {
+
+                            maxQ.pop_back();
+
+                        }
+
+                        maxQ.push_back(newIdx);
+
+                        while (!maxQ.empty() && maxQ.front() < leftIdx) {
+
+                            maxQ.pop_front();
+
+                        }
+
+                        while (!minQ.empty() && d[minQ.back()].low >= d[newIdx].low) {
+
+                            minQ.pop_back();
+
+                        }
+
+                        minQ.push_back(newIdx);
+
+                        while (!minQ.empty() && minQ.front() < leftIdx) {
+
+                            minQ.pop_front();
+
+                        }
+
+                        HH[k] = d[maxQ.front()].high;
+
+                        LL[k] = d[minQ.front()].low;
+
+                    }
+
+                    // ----------------------------
+
+                    // Loop over StopPct
+
+                    // ----------------------------
+
+                    for (int j = 0; j < static_cast<int>(StopPct.size()); ++j) {
+
+                        double S = StopPct[j];
+
+                        int position = 0;
+
+                        double benchmarkLong = NaN;
+
+                        double benchmarkShort = NaN;
+
+                        vector<double> E(N, E0);
+
+                        vector<double> DD(N, 0.0);
+
+                        vector<double> trades(N, 0.0);
+
+                        double Emax = E0;
+
+                        // ----------------------------
+
+                        // Run strategy on current WF window
+
+                        // ----------------------------
+
+                        for (int k = indInSample1; k <= indOutSample2; ++k) {
+
+                            bool traded = false;
+
+                            double delta = 0.0;
+
+                            if (k > indInSample1) {
+
+                                delta = PV * (d[k].close - d[k - 1].close) * position;
+
+                            }
+
+                            // ----------------------------
+
+                            // Flat position
+
+                            // ----------------------------
+
+                            if (position == 0) {
+
+                                bool buy = d[k].high >= HH[k];
+
+                                bool sell = d[k].low <= LL[k];
+
+                                if (buy && sell) {
+
+                                    // Conservative whipsaw assumption
+
+                                    delta = -slpg + PV * (LL[k] - HH[k]);
+
+                                    trades[k] = 1.0;
+
+                                } else {
+
+                                    if (buy) {
+
+                                        delta = -slpg / 2.0 + PV * (d[k].close - HH[k]);
+
+                                        position = 1;
+
+                                        traded = true;
+
+                                        benchmarkLong = d[k].high;
+
+                                        trades[k] = 0.5;
+
+                                    }
+
+                                    if (sell) {
+
+                                        delta = -slpg / 2.0 - PV * (d[k].close - LL[k]);
+
+                                        position = -1;
+
+                                        traded = true;
+
+                                        benchmarkShort = d[k].low;
+
+                                        trades[k] = 0.5;
+
+                                    }
+
+                                }
+
+                            }
+
+                            // ----------------------------
+
+                            // Long position
+
+                            // ----------------------------
+
+                            if (position == 1 && !traded) {
+
+                                bool sellShort = d[k].low <= LL[k];
+
+                                bool sell = d[k].low <= benchmarkLong * (1.0 - S);
+
+                                if (sellShort && sell) {
+
+                                    delta = delta - slpg
+
+                                          - 2.0 * PV * (d[k].close - LL[k]);
+
+                                    position = -1;
+
+                                    benchmarkShort = d[k].low;
+
+                                    trades[k] = 1.0;
+
+                                } else {
+
+                                    if (sell) {
+
+                                        delta = delta - slpg / 2.0
+
+                                              - PV * (d[k].close - benchmarkLong * (1.0 - S));
+
+                                        position = 0;
+
+                                        trades[k] = 0.5;
+
+                                    }
+
+                                    if (sellShort) {
+
+                                        delta = delta - slpg
+
+                                              - 2.0 * PV * (d[k].close - LL[k]);
+
+                                        position = -1;
+
+                                        benchmarkShort = d[k].low;
+
+                                        trades[k] = 1.0;
+
+                                    }
+
+                                }
+
+                                benchmarkLong = max(d[k].high, benchmarkLong);
+
+                            }
+
+                            // ----------------------------
+
+                            // Short position
+
+                            // ----------------------------
+
+                            if (position == -1 && !traded) {
+
+                                bool buyLong = d[k].high >= HH[k];
+
+                                bool buy = d[k].high >= benchmarkShort * (1.0 + S);
+
+                                if (buyLong && buy) {
+
+                                    delta = delta - slpg
+
+                                          + 2.0 * PV * (d[k].close - HH[k]);
+
+                                    position = 1;
+
+                                    benchmarkLong = d[k].high;
+
+                                    trades[k] = 1.0;
+
+                                } else {
+
+                                    if (buy) {
+
+                                        delta = delta - slpg / 2.0
+
+                                              + PV * (d[k].close - benchmarkShort * (1.0 + S));
+
+                                        position = 0;
+
+                                        trades[k] = 0.5;
+
+                                    }
+
+                                    if (buyLong) {
+
+                                        delta = delta - slpg
+
+                                              + 2.0 * PV * (d[k].close - HH[k]);
+
+                                        position = 1;
+
+                                        benchmarkLong = d[k].high;
+
+                                        trades[k] = 1.0;
+
+                                    }
+
+                                }
+
+                                benchmarkShort = min(d[k].low, benchmarkShort);
+
+                            }
+
+                            E[k] = (k > indInSample1 ? E[k - 1] : E0) + delta;
+
+                            Emax = max(Emax, E[k]);
+
+                            DD[k] = E[k] - Emax;
+
+                        }
+
+                        ResultStats inRes =
+
+                            computeStats(E, DD, trades, indInSample1, indInSample2, warmup);
+
+                        ResultStats outRes =
+
+                            computeStats(E, DD, trades, indOutSample1, indOutSample2, warmup);
+
+                        double score = inRes.profit;
+
+                        if (score > localBestScore) {
+
+                            localBestScore = score;
+
+                            localBestL = L;
+
+                            localBestS = S;
+
+                            localBestInRes = inRes;
+
+                            localBestOutRes = outRes;
+
+                        }
+
+                    }
+
+                }
+
+                // Merge thread-local best into global best
+
+                #pragma omp critical
+
+                {
+
+                    if (localBestScore > bestScore) {
+
+                        bestScore = localBestScore;
+
+                        bestL = localBestL;
+
+                        bestS = localBestS;
+
+                        bestInRes = localBestInRes;
+
+                        bestOutRes = localBestOutRes;
+
+                    }
+
+                }
+
+            }
+
+            if (bestL == -1) {
+
+                cout << "No valid parameter found for this window." << endl;
+
+                inStartDate = addMonthsDate(inStartDate, stepMonths);
+
+                continue;
+
+            }
+
+            resultOut << inStartDate << ","
+
+                      << inEndDate << ","
+
+                      << outStartDate << ","
+
+                      << outEndDate << ","
+
+                      << bestL << ","
+
+                      << bestS << ","
+
+                      << bestInRes.profit << ","
+
+                      << bestInRes.worstDrawdown << ","
+
+                      << bestInRes.pnlStd << ","
+
+                      << bestInRes.numTrades << ","
+
+                      << bestOutRes.profit << ","
+
+                      << bestOutRes.worstDrawdown << ","
+
+                      << bestOutRes.pnlStd << ","
+
+                      << bestOutRes.numTrades
+
+                      << "\n";
+
+            cout << "Best for window: "
+
+                 << "L = " << bestL
+
+                 << ", S = " << bestS
+
+                 << " | InProfit = " << bestInRes.profit
+
+                 << " | OutProfit = " << bestOutRes.profit
+
+                 << endl;
+
+            inStartDate = addMonthsDate(inStartDate, stepMonths);
+
+        }
+
+        resultOut.close();
+
+        cout << "\nFinished. Results saved to walk_forward_4y_update_results.csv" << endl;
+
+    } catch (const exception& e) {
+
+        cerr << "Error: " << e.what() << endl;
+
+    }
+
+    return 0;
+
+}
