@@ -71,7 +71,7 @@ The TY futures market exhibits time-scale-dependent inefficiency:
 
 These results suggest that the TY market does not show uniform behavior across all time scales. Medium horizons show more consistent mean-reversion evidence, while longer horizons show mixed signals: the Push-Response test suggests continuation, but the Variance Ratio test remains below one.
 
-Therefore, channel-based breakout strategies may be worth testing at longer lookback windows, but the evidence should be interpreted cautiously.
+Therefore, channel-based breakout strategies may be worth testing at longer lookback windows, where the Push-Response test suggests some trend-following behavior, although the evidence remains mixed.
 
 ---
 
