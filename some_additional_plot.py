@@ -6,11 +6,13 @@ import matplotlib.pyplot as plt
 # ============================================================
 # Load data
 # ============================================================
+IS = 48
+OOS = 3
+STEP = 3
 
-summary_file = "walk_forward_quarterly_summary_IS48_OOS12_STEP12.csv"
-equity_file = "walk_forward_oos_equity_curve_IS48_OOS12_STEP12.csv"
-trades_file = "walk_forward_oos_trade_events_IS48_OOS12_STEP12.csv"
-
+summary_file = f"walk_forward_quarterly_summary_IS{IS}_OOS{OOS}_STEP{STEP}.csv"
+equity_file = f"walk_forward_oos_equity_curve_IS{IS}_OOS{OOS}_STEP{STEP}.csv"
+trades_file = f"walk_forward_oos_trade_events_IS{IS}_OOS{OOS}_STEP{STEP}.csv"
 summary = pd.read_csv(summary_file)
 eq = pd.read_csv(equity_file)
 trades = pd.read_csv(trades_file)
