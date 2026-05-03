@@ -1,0 +1,7 @@
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pyo
+*.DS_Store
+results_py_ty_1m/TY_1m/TY_1m_fullsample_equity.csv
+results_py_ty_1m/TY_1m/TY_1m_walkforward_equity.csv

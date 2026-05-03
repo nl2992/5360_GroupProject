@@ -1,0 +1,42 @@
+# --- macOS / system ---
+.DS_Store
+*.swp
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.vendor/
+
+# --- IDE / editor ---
+.vscode/
+.idea/
+
+
+# --- C++ build artifacts ---
+cpp/build/
+cpp/tf_backtest_treasury_btc
+*.dSYM/
+*.o
+*.obj
+*.exe
+
+# --- Large per-bar series files (regenerated deterministically) ---
+# The small summary/ledger/params/metrics/trades CSVs under results/ are tracked.
+# The per-bar equity / returns / reference series files are too large for git.
+**/*equity.csv
+**/*reference_series.csv
+**/*returns.csv
+
+# --- Large 1-minute upstream data files (regeneratable) ---
+data/*-1minHLV.csv
+
+# --- Per-run scratch / logs ---
+*.log
+*.tmp
