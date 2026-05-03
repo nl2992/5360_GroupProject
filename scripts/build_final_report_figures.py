@@ -86,7 +86,7 @@ def _save(fig: plt.Figure, name: str) -> Path:
     return out
 
 
-def _credit(ax: plt.Axes, text: str = "MATH GR5360 — Group 1 — Columbia MAFN") -> None:
+def _credit(ax: plt.Axes, text: str = "MATH GR5360 - Group 1 - Columbia MAFN") -> None:
     ax.text(
         0.99,
         -0.16,
@@ -125,7 +125,7 @@ def figure_vr_curves() -> None:
 
     axes[0].set_ylabel("Variance ratio VR(q)")
     fig.suptitle(
-        "Lo–MacKinlay variance-ratio profile — TY vs BTC",
+        "Lo–MacKinlay variance-ratio profile - TY vs BTC",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -174,7 +174,7 @@ def figure_push_response() -> None:
         ax.legend(loc="best")
 
     fig.suptitle(
-        "Push–Response diagrams (conditional mean response) — reference horizons",
+        "Push–Response diagrams (conditional mean response) - reference horizons",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -223,7 +223,7 @@ def figure_equity_curves() -> None:
 
     axes[1].set_xlabel("Date")
     fig.suptitle(
-        "Channel WithDDControl — out-of-sample walk-forward equity",
+        "Channel WithDDControl - out-of-sample walk-forward equity",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -261,7 +261,7 @@ def figure_underwater() -> None:
 
     axes[1].set_xlabel("Date")
     fig.suptitle(
-        "Drawdown family — Chekhlov underwater equity",
+        "Drawdown family - Chekhlov underwater equity",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -289,19 +289,19 @@ def figure_param_stability() -> None:
         # Channel length L over time
         ax_l = axes[0, col]
         ax_l.plot(df["Period"], df["L"], color=color, marker="o", ms=3, lw=1.0)
-        ax_l.set_title(f"{label} — channel length L by quarter")
+        ax_l.set_title(f"{label} - channel length L by quarter")
         ax_l.set_xlabel("Walk-forward period #")
         ax_l.set_ylabel("L (5-min bars)")
 
         # Stop S over time
         ax_s = axes[1, col]
         ax_s.plot(df["Period"], df["S"], color=COLUMBIA_RED, marker="s", ms=3, lw=1.0)
-        ax_s.set_title(f"{label} — drawdown stop S by quarter")
+        ax_s.set_title(f"{label} - drawdown stop S by quarter")
         ax_s.set_xlabel("Walk-forward period #")
         ax_s.set_ylabel("S (fraction)")
 
     fig.suptitle(
-        "Walk-forward parameter stability — chosen (L, S) per quarter",
+        "Walk-forward parameter stability - chosen (L, S) per quarter",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -366,7 +366,7 @@ def figure_trade_distributions() -> None:
         ax_p.hist(loss, bins=bins, color=COLUMBIA_RED, alpha=0.65, label=f"losers (n={len(loss)})")
         ax_p.hist(win, bins=bins, color=COLUMBIA_GREEN, alpha=0.75, label=f"winners (n={len(win)})")
         ax_p.axvline(0, color=COLUMBIA_INK, lw=0.8)
-        ax_p.set_title(f"{label} — OOS trade PnL distribution")
+        ax_p.set_title(f"{label} - OOS trade PnL distribution")
         ax_p.set_xlabel("PnL ($)")
         ax_p.set_ylabel("count")
         ax_p.legend(loc="upper right")
@@ -374,12 +374,12 @@ def figure_trade_distributions() -> None:
         # Duration histogram (in bars)
         ax_d = axes[1, col]
         ax_d.hist(df["duration_bars"], bins=40, color=color, alpha=0.75)
-        ax_d.set_title(f"{label} — OOS trade duration (bars)")
+        ax_d.set_title(f"{label} - OOS trade duration (bars)")
         ax_d.set_xlabel("Duration (5-min bars)")
         ax_d.set_ylabel("count")
 
     fig.suptitle(
-        "Trade-ledger distributions — out-of-sample walk-forward",
+        "Trade-ledger distributions - out-of-sample walk-forward",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -424,7 +424,7 @@ def figure_is_oos_comparison() -> None:
         ax.axhline(0, color=COLUMBIA_INK, lw=0.6)
 
     fig.suptitle(
-        "Performance decay — full-sample vs out-of-sample walk-forward",
+        "Performance decay - full-sample vs out-of-sample walk-forward",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,
@@ -454,7 +454,7 @@ def figure_cumulative_trades() -> None:
         ax.axhline(0, color=COLUMBIA_INK, lw=0.6)
         ax.set_xlabel("Closed-trade index (chronological)")
         ax.set_ylabel("Cumulative PnL ($)")
-        ax.set_title(f"{label} — cumulative ledger PnL")
+        ax.set_title(f"{label} - cumulative ledger PnL")
         ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v/1000:,.0f}k"))
 
     fig.suptitle(
@@ -503,7 +503,7 @@ def figure_ty_resolution() -> None:
         ax.legend(loc="upper right")
 
     fig.suptitle(
-        "TY data resolution comparison — 5-minute vs 1-minute bars",
+        "TY data resolution comparison - 5-minute vs 1-minute bars",
         color=COLUMBIA_NAVY,
         fontweight="bold",
         fontsize=14,

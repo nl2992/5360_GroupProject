@@ -1,4 +1,4 @@
-# Corrected Backtest Logic — C++ 5-Minute Confirmation
+# Corrected Backtest Logic - C++ 5-Minute Confirmation
 
 This run reflects the logic fixes applied on 2026-05-01 before the Python notebook reruns.
 

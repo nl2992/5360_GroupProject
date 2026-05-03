@@ -1,6 +1,6 @@
-# MATH GR5360 — Final Project Report
+# MATH GR5360 - Final Project Report
 
-**Group 1 — Columbia MAFN — Spring 2026**
+**Group 1 - Columbia MAFN - Spring 2026**
 
 Channel WithDDControl trend-following on the **TY** (10-year US Treasury futures) primary market and the **BTC** (CME Bitcoin futures) secondary market.
 
@@ -26,18 +26,18 @@ Channel WithDDControl trend-following on the **TY** (10-year US Treasury futures
 10. [T × τ sensitivity](#10-t--τ-sensitivity)
 11. [Conclusions](#11-conclusions)
 12. [Reproducibility](#12-reproducibility)
-13. [Appendix A — TY 1-minute resolution run](#13-appendix-a--ty-1-minute-resolution-run)
+13. [Appendix A - TY 1-minute resolution run](#13-appendix-a--ty-1-minute-resolution-run)
 
 ---
 
 ## 1. Executive summary
 
-We implemented `Channel WithDDControl` — the breakout trend-following system supplied in `main.m` / `ezread.m` — in two parity-checked engines (Python with Numba and C++17). Both engines reproduce each other to within float64 noise (`< 1e-14` relative on net profit, exact on closed-trade counts).
+We implemented `Channel WithDDControl` - the breakout trend-following system supplied in `main.m` / `ezread.m` - in two parity-checked engines (Python with Numba and C++17). Both engines reproduce each other to within float64 noise (`< 1e-14` relative on net profit, exact on closed-trade counts).
 
 The strategy was applied to:
 
-- **Primary market — TY** (10-year US Treasury note futures, 5-min OHLC bars, Jan-1983 → Apr-2026, ≈ 43 years, 863 887 bars).
-- **Secondary market — BTC** (CME Bitcoin futures, 5-min OHLC bars, Dec-2017 → Apr-2026, ≈ 8.4 years, 590 436 bars).
+- **Primary market - TY** (10-year US Treasury note futures, 5-min OHLC bars, Jan-1983 → Apr-2026, ≈ 43 years, 863 887 bars).
+- **Secondary market - BTC** (CME Bitcoin futures, 5-min OHLC bars, Dec-2017 → Apr-2026, ≈ 8.4 years, 590 436 bars).
 
 A walk-forward optimisation with `T = 4 years` in-sample / `τ = 1 quarter` out-of-sample, scanning the full `(L, S)` grid `ChnLen ∈ [500, 10 000]` step 10 and `StpPct ∈ [0.005, 0.10]` step 0.001 (≈ 91 296 nodes per period, 950 IS objective evaluations per period after sparse de-duplication), produced 155 quarterly OOS slices for TY and 7 for BTC.
 
@@ -93,9 +93,9 @@ on price differences over the active session, evaluated on a logarithmic grid of
 
 ![Variance ratio profile](figures/fig_vr_curves.png)
 
-**TY.** VR(q) is < 1 over the whole tested horizon, dipping to ~0.89 around 10 sessions — i.e. realised price-difference variance over 10-session windows is *less* than the random-walk benchmark, consistent with a small mean-reverting microstructure component. The deviation is small (< 11%) and `Z₂*` does not reject the null at the 5 % level on any horizon, which is *characteristic of a liquid, deep-book government-bond contract*: the daily price action is nearly a random walk in the sense of Lo–MacKinlay. The very mild VR < 1 we do observe is bid-ask bounce in the 5-min book.
+**TY.** VR(q) is < 1 over the whole tested horizon, dipping to ~0.89 around 10 sessions - i.e. realised price-difference variance over 10-session windows is *less* than the random-walk benchmark, consistent with a small mean-reverting microstructure component. The deviation is small (< 11%) and `Z₂*` does not reject the null at the 5 % level on any horizon, which is *characteristic of a liquid, deep-book government-bond contract*: the daily price action is nearly a random walk in the sense of Lo–MacKinlay. The very mild VR < 1 we do observe is bid-ask bounce in the 5-min book.
 
-**BTC.** VR(q) reaches a deeper minimum of ~0.82 around 8.6 days — a slightly stronger mean-reverting tilt at the multi-day horizon, again not rejected at 5 %. BTC's profile is monotonically descending then re-rising at very long horizons, a signature shared with index futures that combine intraday mean reversion with multi-week trends.
+**BTC.** VR(q) reaches a deeper minimum of ~0.82 around 8.6 days - a slightly stronger mean-reverting tilt at the multi-day horizon, again not rejected at 5 %. BTC's profile is monotonically descending then re-rising at very long horizons, a signature shared with index futures that combine intraday mean reversion with multi-week trends.
 
 ### 3.2 Push–Response test
 
@@ -189,7 +189,7 @@ Resulting period counts:
 The two underwater curves give very different visual signatures:
 
 - **TY** spends long stretches under water (peak-to-trough recoveries of multiple years), with a max single drawdown of ~11 % of running peak. This is structural for a 1.5 % / yr trend-following bond strategy.
-- **BTC** shows steeper but markedly shorter drawdowns. Max underwater of ~22 % is recovered in ~4 months — fast, despite the larger absolute dollar drawdown — because realised volatility is ~8× larger.
+- **BTC** shows steeper but markedly shorter drawdowns. Max underwater of ~22 % is recovered in ~4 months - fast, despite the larger absolute dollar drawdown - because realised volatility is ~8× larger.
 
 ### 6.3 Trade-by-trade ledger
 
@@ -213,7 +213,7 @@ The two underwater curves give very different visual signatures:
 | Best winner | $8 170 | $45 115 |
 | Worst loser | −$2 952 | −$10 600 |
 
-> The TY profit factor < 1 is a *known artifact of the trend-following payoff structure on bonds*: most quarters lose small amounts as the channel chops, and a handful of large multi-quarter trends carry the curve. The Profit/MaxDD criterion (assignment-mandated objective) is what the system optimises against, and that ratio is 4.3× — well within the "good" zone.
+> The TY profit factor < 1 is a *known artifact of the trend-following payoff structure on bonds*: most quarters lose small amounts as the channel chops, and a handful of large multi-quarter trends carry the curve. The Profit/MaxDD criterion (assignment-mandated objective) is what the system optimises against, and that ratio is 4.3× - well within the "good" zone.
 
 ---
 
@@ -235,7 +235,7 @@ Decay coefficients (OOS / IS per-quarter):
 | TY  | 54.8 % (85 / 155) |
 | BTC | 100 % (7 / 7) |
 
-The TY decay (≈ 26 %) is exactly what trend-following literature warns about: the IS optimiser overfits a four-year window aggressively, OOS-realised payoff is ¼ of that. BTC paradoxically pays *more* OOS than the IS-normalised claim — the IS objective favoured smaller `L`, which truncated the most explosive 2024–2025 trends; OOS the same `(L*, S*)` rode the next leg up. This is **a property of the BTC sample, not a property the trader can rely on going forward**, and we flag it explicitly.
+The TY decay (≈ 26 %) is exactly what trend-following literature warns about: the IS optimiser overfits a four-year window aggressively, OOS-realised payoff is ¼ of that. BTC paradoxically pays *more* OOS than the IS-normalised claim - the IS objective favoured smaller `L`, which truncated the most explosive 2024–2025 trends; OOS the same `(L*, S*)` rode the next leg up. This is **a property of the BTC sample, not a property the trader can rely on going forward**, and we flag it explicitly.
 
 Sharpe decay:
 
@@ -272,7 +272,7 @@ Two-engine cross-validation is a hard requirement of the assignment ("preferably
 
 (Source: `results/walkforward/python_cpp_fidelity_comparison.csv`.)
 
-The only differences are float64 round-off in the cumulative MDD division — closed-trade counts and net profit match to the cent.
+The only differences are float64 round-off in the cumulative MDD division - closed-trade counts and net profit match to the cent.
 
 ---
 
@@ -294,13 +294,13 @@ The assignment-prescribed `(T, τ) = (4 yr, 1 Q)` is therefore retained as the h
 
 1. **TY exhibits a multi-week trend regime**, identifiable in the push–response Spearman ρ at ≈ 18 sessions (ρ ≈ 0.59, p ≈ 0.06). The variance-ratio profile is consistent with a near-random-walk that reverts gently at intraday horizons (bid-ask bounce) but does not reject the null. Channel breakout with `L ≈ 1920` (≈ 24 trading days) and a 1 % equity stop captures the regime; the full OOS walk-forward earns **RoA ≈ 4.3×** over 1987–2026.
 
-2. **BTC is a mixed-regime market** — mean-reverting at intraday and multi-day horizons (push–response ρ < 0), trend-following at ≈ 12 days (ρ ≈ 0.67, p ≈ 0.02). The optimiser correctly picks short `L*` (1-day to 4-day breakouts) and a 1 % stop. OOS RoA is **4.1×** with a Sharpe of **3.0** — a function of the violently trending 2024–2025 cycle and to be interpreted with caution.
+2. **BTC is a mixed-regime market** - mean-reverting at intraday and multi-day horizons (push–response ρ < 0), trend-following at ≈ 12 days (ρ ≈ 0.67, p ≈ 0.02). The optimiser correctly picks short `L*` (1-day to 4-day breakouts) and a 1 % stop. OOS RoA is **4.1×** with a Sharpe of **3.0** - a function of the violently trending 2024–2025 cycle and to be interpreted with caution.
 
 3. The Python (Numba) and C++ engines reproduce each other to **float-64 precision** on every metric. Trade counts match exactly. The walk-forward OOS equity curves are bit-identical to the cent.
 
 4. The strategy's economic value is *exactly* that the OOS slope ≈ ¼ of the in-sample slope on TY (decay = 26 %). For BTC the OOS slope happens to exceed the IS slope on the limited 7-quarter window, which we flag as sample-specific and not a forward-looking claim.
 
-5. The TY result satisfies the project's grading rubric: "judged on how close your results are to the expected ones" — the Channel WithDDControl trader is a structurally trend-following system on a structurally trending bond market, with a well-behaved 4× return-on-account.
+5. The TY result satisfies the project's grading rubric: "judged on how close your results are to the expected ones" - the Channel WithDDControl trader is a structurally trend-following system on a structurally trending bond market, with a well-behaved 4× return-on-account.
 
 ---
 
@@ -350,7 +350,7 @@ All figure PNGs in `report/figures/` are regenerated deterministically from the 
 
 ---
 
-## 13. Appendix A — TY 1-minute resolution run
+## 13. Appendix A - TY 1-minute resolution run
 
 The assignment notes that "if you feel your code is fast enough, or you just want to explore more in-depth, you can apply the strategies to 1-min data". We did. The C++ engine can grind a full 4 319 435-bar TY history through the 91 296-node grid, 155 quarterly periods deep, in well under an hour on a single core; the Python engine (Numba JIT) is within ~3× of that on the same machine.
 
@@ -372,7 +372,7 @@ The 1-minute TY series spans the same 03 Jan 1983 → 10 Apr 2026 window as the 
 | Avg trade duration           | 4 786 bars (≈12 sessions) | 3 191 bars (≈ 8 sessions) |
 | CDD(α = 0.05)                | $13 085.2              | $11 983.4              |
 
-> **The 1-minute run earns *more* OOS net profit and a higher RoA than the 5-minute run** ($71 952 / 4.61× vs $68 336 / 4.31×) — i.e. the finer resolution captures extra micro-moves at the breakout boundary without paying disproportionate slippage. Sharpe and profit factor are essentially flat; the win rate moves down 0.3 pp; the average winner lifts to $1 269 (vs $1 265 at 5m). This is a textbook outcome: the strategy is a slow trend follower, the bar-resolution change shifts the *quality of execution* on the breakout itself, not the *direction* of the bet.
+> **The 1-minute run earns *more* OOS net profit and a higher RoA than the 5-minute run** ($71 952 / 4.61× vs $68 336 / 4.31×) - i.e. the finer resolution captures extra micro-moves at the breakout boundary without paying disproportionate slippage. Sharpe and profit factor are essentially flat; the win rate moves down 0.3 pp; the average winner lifts to $1 269 (vs $1 265 at 5m). This is a textbook outcome: the strategy is a slow trend follower, the bar-resolution change shifts the *quality of execution* on the breakout itself, not the *direction* of the bet.
 
 ### Side-by-side metrics
 
@@ -413,4 +413,4 @@ The per-bar equity curve (≈ 4.3 M rows) is regenerated on demand by `python sc
 
 ---
 
-*Columbia MAFN — MATH GR5360 — Mathematical Methods in Financial Price Analysis — Spring 2026*
+*Columbia MAFN - MATH GR5360 - Mathematical Methods in Financial Price Analysis - Spring 2026*

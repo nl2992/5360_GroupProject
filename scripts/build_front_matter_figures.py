@@ -68,7 +68,7 @@ def _save(fig, name):
     return out
 
 
-def _credit(ax, text="Source: Group 1 — TF Data 5-min OHLC"):
+def _credit(ax, text="Source: Group 1 - TF Data 5-min OHLC"):
     ax.text(
         0.0,
         -0.15,
@@ -97,7 +97,7 @@ def figure_ty_price():
     fig, ax = plt.subplots(figsize=(11.5, 5.0))
     ax.fill_between(daily.index, daily.values, daily.min(), color=COL_BLUE, alpha=0.35)
     ax.plot(daily.index, daily.values, color=COL_NAVY, lw=1.2)
-    ax.set_title("TY (10-yr Treasury futures) — daily-resampled close price, 1983–2026",
+    ax.set_title("TY (10-yr Treasury futures) - daily-resampled close price, 1983–2026",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.set_ylabel("Price (points)")
     ax.set_xlabel("Date")
@@ -123,7 +123,7 @@ def figure_btc_price():
     fig, ax = plt.subplots(figsize=(11.5, 5.0))
     ax.fill_between(daily.index, daily.values, daily.min(), color=COL_GOLD, alpha=0.20)
     ax.plot(daily.index, daily.values, color=COL_GOLD, lw=1.4)
-    ax.set_title("BTC (CME Bitcoin futures) — daily-resampled close price, 2017–2026",
+    ax.set_title("BTC (CME Bitcoin futures) - daily-resampled close price, 2017–2026",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.set_ylabel("Price (USD)")
     ax.set_xlabel("Date")
@@ -186,7 +186,7 @@ def figure_horizon_spectrum():
                 arrowprops=dict(arrowstyle="-|>", color=COL_NAVY, lw=1.4),
                 xycoords="axes fraction", textcoords="axes fraction")
     # Caption
-    ax.text(0.5, 0.02, "Horizon spectrum — both markets live on the trend-following side, but at very different time-scales.",
+    ax.text(0.5, 0.02, "Horizon spectrum - both markets live on the trend-following side, but at very different time-scales.",
             ha="center", color=COL_INK, fontsize=10, transform=ax.transAxes, fontstyle="italic")
     # Title
     ax.set_title("Where each market lives on the trend / mean-reversion spectrum",
@@ -266,9 +266,9 @@ def figure_pr_test_card():
              ha="center", va="top", fontsize=10, color=COL_INK)
 
     rows = [
-        ("ρ > 0", "monotonically increasing — trend-following", COL_GREEN),
+        ("ρ > 0", "monotonically increasing - trend-following", COL_GREEN),
         ("ρ ≈ 0", "no monotone predictability", COL_GREY),
-        ("ρ < 0", "monotonically decreasing — mean-reverting", COL_RED),
+        ("ρ < 0", "monotonically decreasing - mean-reverting", COL_RED),
     ]
     fig.text(0.04, 0.30, "Interpretation", color=COL_NAVY, fontsize=12, fontweight="bold")
     for i, (lhs, rhs, color) in enumerate(rows):
@@ -276,7 +276,7 @@ def figure_pr_test_card():
         fig.text(0.06, y, lhs, color=color, fontsize=11, fontweight="bold", family="DejaVu Sans Mono")
         fig.text(0.16, y, rhs, color=COL_INK, fontsize=11)
 
-    fig.text(0.04, 0.04, "Source: Lecture 4 — Lehalle & Laruelle (2013), Market Microstructure in Practice",
+    fig.text(0.04, 0.04, "Source: Lecture 4 - Lehalle & Laruelle (2013), Market Microstructure in Practice",
              color=COL_GREY, fontsize=8.5)
     _save(fig, "front_pr_test_card.png")
 
@@ -293,13 +293,13 @@ def figure_horizons_context():
                                     boxstyle="round,pad=0.02",
                                     fc=COL_CREAM, ec=COL_NAVY, lw=1.2,
                                     transform=ax_ty.transAxes))
-    ax_ty.text(0.5, 0.94, "TY — slow trend regime", color=COL_NAVY, fontsize=14,
+    ax_ty.text(0.5, 0.94, "TY - slow trend regime", color=COL_NAVY, fontsize=14,
                fontweight="bold", ha="center", transform=ax_ty.transAxes)
     items_ty = [
-        ("Players", "Pension funds, insurers, central banks — slow macro reactors."),
-        ("Drivers", "FOMC, inflation prints, fiscal news — multi-day to multi-week moves."),
+        ("Players", "Pension funds, insurers, central banks - slow macro reactors."),
+        ("Drivers", "FOMC, inflation prints, fiscal news - multi-day to multi-week moves."),
         ("Vol", "Annualised ~4–6%; intraday is mostly bid-ask noise."),
-        ("Microstructure", "Deep liquid book — short-term arbitrage corrects deviations fast."),
+        ("Microstructure", "Deep liquid book - short-term arbitrage corrects deviations fast."),
         ("Implication", "Channel L > 500 bars (~ multi-week) needed to filter noise."),
     ]
     for i, (k, v) in enumerate(items_ty):
@@ -316,11 +316,11 @@ def figure_horizons_context():
                                      boxstyle="round,pad=0.02",
                                      fc=COL_CREAM, ec=COL_GOLD, lw=1.2,
                                      transform=ax_btc.transAxes))
-    ax_btc.text(0.5, 0.94, "BTC — fast trend regime", color=COL_GOLD, fontsize=14,
+    ax_btc.text(0.5, 0.94, "BTC - fast trend regime", color=COL_GOLD, fontsize=14,
                 fontweight="bold", ha="center", transform=ax_btc.transAxes)
     items_btc = [
-        ("Players", "Retail + algorithmic momentum — self-reinforcing flows."),
-        ("Drivers", "Regulatory news, exchange events, risk-off — minutes to days."),
+        ("Players", "Retail + algorithmic momentum - self-reinforcing flows."),
+        ("Drivers", "Regulatory news, exchange events, risk-off - minutes to days."),
         ("Vol", "Annualised ~30–60%; intraday signal-to-noise is high."),
         ("Microstructure", "Thinner book; large flows leave persistent imprints."),
         ("Implication", "Channel L ≈ 276 bars (1 day) is enough to identify breakouts."),
@@ -381,7 +381,7 @@ def figure_walkforward_schematic():
             family="DejaVu Sans Mono",
             bbox=dict(boxstyle="round", fc=COL_CREAM, ec=COL_INK, lw=0.5))
 
-    ax.text(0.5, 0.07, "Walk-forward schematic — every 4-year IS optimum is evaluated on the next quarter OOS, then the window slides forward one quarter.",
+    ax.text(0.5, 0.07, "Walk-forward schematic - every 4-year IS optimum is evaluated on the next quarter OOS, then the window slides forward one quarter.",
             ha="center", color=COL_GREY, fontsize=9.5, transform=ax.transAxes, fontstyle="italic")
     fig.suptitle("Rolling 4-year IS → 1-quarter OOS walk-forward",
                  color=COL_NAVY, fontsize=14, fontweight="bold", y=1.02)

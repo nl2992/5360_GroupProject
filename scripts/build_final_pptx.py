@@ -1,5 +1,5 @@
 """
-Assemble the final MATH GR5360 PowerPoint deck — fully Columbia-themed.
+Assemble the final MATH GR5360 PowerPoint deck - fully Columbia-themed.
 
 This builds the deck from scratch (uses the case-comp template only for
 its slide-master dimensions) so every slide has consistent typography,
@@ -52,7 +52,7 @@ def remove_all_slides(prs: Presentation) -> None:
 
 
 def add_blank(prs: Presentation):
-    layout = prs.slide_layouts[3]  # Title Only — minimal placeholders
+    layout = prs.slide_layouts[3]  # Title Only - minimal placeholders
     slide = prs.slides.add_slide(layout)
     # Hide any inherited title placeholder
     for shape in list(slide.shapes):
@@ -141,7 +141,7 @@ def add_title_strip(slide, prs: Presentation, title: str, section: str = ""):
 def add_footer(slide, prs: Presentation, slide_no: int, total: int):
     sw, sh = prs.slide_width, prs.slide_height
     add_text(slide, Inches(0.4), sh - Inches(0.45), sw - Inches(0.8), Inches(0.3),
-             "MATH GR5360 Final Project · Group 1 · Columbia MAFN — Spring 2026",
+             "MATH GR5360 Final Project · Group 1 · Columbia MAFN - Spring 2026",
              size=9, color=COL_GREY)
     add_text(slide, sw - Inches(1.4), sh - Inches(0.45), Inches(1.0), Inches(0.3),
              f"{slide_no} / {total}", size=9, color=COL_GREY, align=PP_ALIGN.RIGHT)
@@ -164,7 +164,7 @@ def fit_image_in_box(slide, path: Path, box_left, box_top, box_w, box_h):
 
 
 # ---------------------------------------------------------------------------
-# Slide builders — front matter (1-13)
+# Slide builders - front matter (1-13)
 # ---------------------------------------------------------------------------
 def slide_title(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs)
@@ -192,7 +192,7 @@ def slide_title(prs: Presentation, slide_no: int, total: int):
              "Walk-forward validation of horizon-specific trend inefficiencies",
              size=14, color=COL_LIGHT, italic=True)
 
-    # Stat strip — 4 boxes
+    # Stat strip - 4 boxes
     strip_y = Inches(4.5)
     strip_h = Inches(1.4)
     strip_w = (sw - Inches(1.4)) / 4
@@ -228,7 +228,7 @@ def slide_executive_summary(prs: Presentation, slide_no: int, total: int):
 
     # Big quote
     add_text(slide, Inches(0.5), Inches(1.05), sw - Inches(1.0), Inches(0.7),
-             '"Trend-following is real in both markets — but the usable horizon is market-specific."',
+             '"Trend-following is real in both markets - but the usable horizon is market-specific."',
              size=18, bold=True, color=COL_NAVY, italic=True)
 
     # 3 cards: Thesis / Evidence / Results
@@ -262,7 +262,7 @@ def slide_executive_summary(prs: Presentation, slide_no: int, total: int):
                  int(card_w) - Inches(0.4), card_h - Inches(0.7),
                  body, size=11, color=COL_INK)
 
-    # Bottom strip — key finding
+    # Bottom strip - key finding
     add_rect(slide, Inches(0.5), sh - Inches(1.4), sw - Inches(1.0), Inches(0.7), COL_NAVY)
     add_text(slide, Inches(0.7), sh - Inches(1.27), sw - Inches(1.4), Inches(0.5),
              "Key finding: One framework, calibrated to each market's autocorrelation structure, "
@@ -281,7 +281,7 @@ def slide_roadmap(prs: Presentation, slide_no: int, total: int):
         ("01", "Markets & Methodology",
          "Contract specifications, data audit, why TY × BTC pair, assignment scope."),
         ("02", "Diagnostics: Random Walk Tests",
-         "Variance Ratio (Lo–MacKinlay) + Push-Response — locate the inefficiency in time."),
+         "Variance Ratio (Lo–MacKinlay) + Push-Response - locate the inefficiency in time."),
         ("03", "Strategy: Channel WithDDControl",
          "Breakout system + drawdown control. Walk-forward 4 yr IS / 1 quarter OOS, full grid."),
         ("04", "Out-of-Sample Performance",
@@ -347,7 +347,7 @@ def slide_assignment(prs: Presentation, slide_no: int, total: int):
     # Bottom strip
     add_rect(slide, Inches(0.5), sh - Inches(1.3), sw - Inches(1.0), Inches(0.65), COL_CREAM)
     add_text(slide, Inches(0.7), sh - Inches(1.18), sw - Inches(1.4), Inches(0.4),
-             "Grading rubric: \"judged on how close your results are to the expected ones\" — "
+             "Grading rubric: \"judged on how close your results are to the expected ones\" - "
              "we report the 4× return-on-account both markets deliver under TF-Data slippage.",
              size=11, bold=False, color=COL_INK, italic=True)
 
@@ -357,15 +357,15 @@ def slide_assignment(prs: Presentation, slide_no: int, total: int):
 def slide_market_specs(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Markets — contract specifications", section="Data & Markets")
+    add_title_strip(slide, prs, "Markets - contract specifications", section="Data & Markets")
 
     # Subtitle
     add_text(slide, Inches(0.5), Inches(1.0), sw - Inches(1.0), Inches(0.4),
-             "Same system, different inefficiency time-scales — calibration follows the contract.",
+             "Same system, different inefficiency time-scales - calibration follows the contract.",
              size=12, italic=True, color=COL_GREY)
 
     # Build the table manually as rectangles for full styling control
-    headers = ["Field", "TY — 10-yr Treasury futures", "BTC — CME Bitcoin futures"]
+    headers = ["Field", "TY - 10-yr Treasury futures", "BTC - CME Bitcoin futures"]
     rows = [
         ("Exchange", "CBOT / CME", "CME"),
         ("Currency", "USD", "USD"),
@@ -422,18 +422,18 @@ def slide_market_overview(prs: Presentation, slide_no: int, total: int, market: 
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
     if market == "TY":
-        title = "Primary market — TY (10-yr Treasury futures)"
+        title = "Primary market - TY (10-yr Treasury futures)"
         section = "Markets"
         img = FIG_PRES / "front_ty_price_history.png"
         bullets = [
-            "43-year continuous backadjusted history — the longest dataset in the project.",
+            "43-year continuous backadjusted history - the longest dataset in the project.",
             "Macro-driven contract: Fed cycles, inflation prints, fiscal news.",
             "Deep, liquid CBOT order book; tight spreads; small intraday slippage.",
             "Annualised vol ≈ 4–6%; intraday signal-to-noise low.",
             "Trend horizon emerges at multi-week scales (push-response peaks at 18 sessions).",
         ]
     else:
-        title = "Secondary market — BTC (CME Bitcoin futures)"
+        title = "Secondary market - BTC (CME Bitcoin futures)"
         section = "Markets"
         img = FIG_PRES / "front_btc_price_history.png"
         bullets = [
@@ -476,7 +476,7 @@ def slide_horizons_context(prs: Presentation, slide_no: int, total: int):
     fit_image_in_box(slide, FIG_PRES / "front_horizons_context.png",
                      Inches(0.4), Inches(1.0), sw - Inches(0.8), sh - Inches(2.0))
     add_text(slide, Inches(0.5), sh - Inches(0.95), sw - Inches(1.0), Inches(0.45),
-             "Same channel-breakout principle on both markets — the optimiser self-selects "
+             "Same channel-breakout principle on both markets - the optimiser self-selects "
              "L ≈ 1 920 bars (~24 sessions) for TY and L ≈ 276 bars (~1 day) for BTC, exactly the "
              "horizons where push-response is positive on each market.",
              size=10.5, color=COL_INK, italic=True)
@@ -486,7 +486,7 @@ def slide_horizons_context(prs: Presentation, slide_no: int, total: int):
 def slide_vr_definition(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Random Walk Test 1 — Variance Ratio", section="Diagnostics")
+    add_title_strip(slide, prs, "Random Walk Test 1 - Variance Ratio", section="Diagnostics")
     fit_image_in_box(slide, FIG_PRES / "front_vr_test_card.png",
                      Inches(0.4), Inches(1.0), sw - Inches(0.8), sh - Inches(2.0))
     add_text(slide, Inches(0.5), sh - Inches(0.95), sw - Inches(1.0), Inches(0.45),
@@ -499,7 +499,7 @@ def slide_vr_definition(prs: Presentation, slide_no: int, total: int):
 def slide_pr_definition(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Random Walk Test 2 — Push-Response", section="Diagnostics")
+    add_title_strip(slide, prs, "Random Walk Test 2 - Push-Response", section="Diagnostics")
     fit_image_in_box(slide, FIG_PRES / "front_pr_test_card.png",
                      Inches(0.4), Inches(1.0), sw - Inches(0.8), sh - Inches(2.0))
     add_text(slide, Inches(0.5), sh - Inches(0.95), sw - Inches(1.0), Inches(0.45),
@@ -533,7 +533,7 @@ def slide_central_thesis(prs: Presentation, slide_no: int, total: int):
         ("02", "Same framework",
          "Channel WithDDControl picks (L, S) by walk-forward optimisation on Net Profit / Max Drawdown. "
          "Because the trend signal is at a shorter horizon for BTC, the optimiser self-selects a "
-         "much smaller L there (276) than on TY (1 920) — no heuristic, just the data."),
+         "much smaller L there (276) than on TY (1 920) - no heuristic, just the data."),
         ("03", "OOS validation",
          "TY OOS: $68 336 / RoA 4.31× / Sharpe 0.31. BTC OOS: $536 397 / RoA 4.07× / Sharpe 3.01. "
          "Both markets earn ≈ 4× return-on-account out-of-sample, with full Bloomberg/TF-Data "
@@ -560,7 +560,7 @@ def slide_central_thesis(prs: Presentation, slide_no: int, total: int):
 def slide_horizon_spectrum(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Horizon spectrum — where each market lives",
+    add_title_strip(slide, prs, "Horizon spectrum - where each market lives",
                     section="Diagnostics")
     fit_image_in_box(slide, FIG_PRES / "front_horizon_spectrum.png",
                      Inches(0.4), Inches(1.0), sw - Inches(0.8), Inches(4.2))
@@ -592,17 +592,17 @@ def slide_horizon_spectrum(prs: Presentation, slide_no: int, total: int):
 
 
 # ---------------------------------------------------------------------------
-# Slide builders — strategy & walk-forward (16, 17)
+# Slide builders - strategy & walk-forward (16, 17)
 # ---------------------------------------------------------------------------
 def slide_strategy_mechanics(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Strategy — Channel WithDDControl", section="Strategy")
+    add_title_strip(slide, prs, "Strategy - Channel WithDDControl", section="Strategy")
 
     # Two columns: parameter table left, logic flow right
     col_w = (sw - Inches(1.3)) / 2
 
-    # Left column — parameters
+    # Left column - parameters
     px = Inches(0.5)
     add_text(slide, px, Inches(1.05), col_w, Inches(0.4),
              "Core parameters", size=14, bold=True, color=COL_NAVY)
@@ -631,7 +631,7 @@ def slide_strategy_mechanics(prs: Presentation, slide_no: int, total: int):
                  body, size=10.5, color=COL_INK)
         py += Inches(1.55)
 
-    # Right column — logic flow
+    # Right column - logic flow
     qx = Inches(0.7) + col_w
     add_text(slide, qx, Inches(1.05), col_w, Inches(0.4),
              "Logic flow per bar", size=14, bold=True, color=COL_NAVY)
@@ -697,7 +697,7 @@ def slide_walkforward(prs: Presentation, slide_no: int, total: int):
 
 
 # ---------------------------------------------------------------------------
-# Existing-style slide builders (results 18-35) — kept from prior version
+# Existing-style slide builders (results 18-35) - kept from prior version
 # ---------------------------------------------------------------------------
 def slide_image_full(prs: Presentation, *, title: str, section: str,
                      image: Path, caption: str, slide_no: int, total: int,
@@ -728,7 +728,7 @@ def slide_section_divider(prs: Presentation, *, label: str, big: str,
     add_text(slide, Inches(0.6), Inches(3.1), sw - Inches(1.2), Inches(2.0),
              big, size=36, bold=True, color=COL_WHITE)
     add_text(slide, Inches(0.6), sh - Inches(0.45), sw - Inches(1.2), Inches(0.3),
-             "MATH GR5360 Final Project · Group 1 · Columbia MAFN — Spring 2026",
+             "MATH GR5360 Final Project · Group 1 · Columbia MAFN - Spring 2026",
              size=9, color=COL_LIGHT)
     add_text(slide, sw - Inches(1.4), sh - Inches(0.45), Inches(1.0), Inches(0.3),
              f"{slide_no} / {total}", size=9, color=COL_LIGHT, align=PP_ALIGN.RIGHT)
@@ -742,7 +742,7 @@ def slide_metrics_table(prs: Presentation, slide_no: int, total: int):
                      Inches(0.4), Inches(1.0), sw - Inches(0.8), sh - Inches(2.0))
     add_text(slide, Inches(0.4), sh - Inches(0.95), sw - Inches(0.8), Inches(0.45),
              "Both markets earn ≈ 4× Return on Account out-of-sample. TY's signal is slow and "
-             "low-vol; BTC's is fast and high-vol — same Channel WithDDControl framework, "
+             "low-vol; BTC's is fast and high-vol - same Channel WithDDControl framework, "
              "calibrated to each market's autocorrelation structure.",
              size=10.5, color=COL_INK)
     add_footer(slide, prs, slide_no, total)
@@ -753,13 +753,13 @@ def slide_conclusion(prs: Presentation, slide_no: int, total: int):
     sw, sh = prs.slide_width, prs.slide_height
     add_title_strip(slide, prs, "Conclusion", section="Summary")
     add_text(slide, Inches(0.6), Inches(1.1), sw - Inches(1.2), Inches(0.7),
-             '"Trend-following is real in both markets — but the usable horizon is market-specific."',
+             '"Trend-following is real in both markets - but the usable horizon is market-specific."',
              size=18, bold=True, color=COL_NAVY, italic=True)
     cards = [
         ("01", "Diagnostics",
          "Variance-ratio test and push-response confirm trend-following at the multi-week horizon "
          "for TY (Spearman ρ ≈ 0.59 at 18 sessions) and at the multi-day horizon for BTC "
-         "(ρ ≈ 0.67 at 12 days). Same statistical framework — different frequency bands."),
+         "(ρ ≈ 0.67 at 12 days). Same statistical framework - different frequency bands."),
         ("02", "Strategy",
          "Channel WithDDControl ported from main.m / ezread.m to Python (Numba JIT) and C++17. "
          "Walk-forward 4-yr IS / 1-Q OOS over the full ChnLen × StpPct grid, "
@@ -789,7 +789,7 @@ def slide_conclusion(prs: Presentation, slide_no: int, total: int):
 def slide_appendix(prs: Presentation, slide_no: int, total: int):
     slide = add_blank(prs); paint_bg(slide, COL_WHITE)
     sw, sh = prs.slide_width, prs.slide_height
-    add_title_strip(slide, prs, "Appendix — repository, parity, key figures",
+    add_title_strip(slide, prs, "Appendix - repository, parity, key figures",
                     section="Appendix")
     items = [
         "Repository: github.com/nl2992/MATH5360_Final_Project",
@@ -800,7 +800,7 @@ def slide_appendix(prs: Presentation, slide_no: int, total: int):
         "Slide-companion narrative: report/presentation/demo.md",
         "All figures regenerated by: scripts/build_final_report_figures.py, "
         "build_presentation_figures.py and build_front_matter_figures.py",
-        "Python ↔ C++ parity: every metric and every closed trade match to float-64 — "
+        "Python ↔ C++ parity: every metric and every closed trade match to float-64 - "
         "see results/walkforward/python_cpp_fidelity_comparison.csv",
     ]
     add_bullets(slide, Inches(0.6), Inches(1.2), sw - Inches(1.2), sh - Inches(2.2),
@@ -837,11 +837,11 @@ def main() -> None:
     slide_central_thesis(prs, 11, TOTAL)
     slide_horizon_spectrum(prs, 12, TOTAL)
     slide_section_divider(prs, label="Diagnostics",
-                          big="Random walk tests on TY and BTC — VR + Push-Response across horizons and decades",
+                          big="Random walk tests on TY and BTC - VR + Push-Response across horizons and decades",
                           slide_no=13, total=TOTAL)
 
     # ----- Diagnostic figures (14-19) -----
-    # 14 — TY price + implied yield (replicates the reference)
+    # 14 - TY price + implied yield (replicates the reference)
     slide_image_full(
         prs,
         title="TY price and implied 10-yr yield, 1983–2026",
@@ -855,21 +855,21 @@ def main() -> None:
         ),
         slide_no=14, total=TOTAL,
     )
-    # 15 — VR vs q (single-curve, q to 5000 — replicates the reference)
+    # 15 - VR vs q (single-curve, q to 5000 - replicates the reference)
     slide_image_full(
         prs,
-        title="Variance Ratio vs q — TY 5-min price differences",
+        title="Variance Ratio vs q - TY 5-min price differences",
         section="Diagnostics",
         image=FIG_PRES / "repl_ty_vr_curve.png",
         caption=(
             "Single-window VR(q) on TY 5-min price differences out to q = 5 000 bars (~62.5 trading days). "
             "VR dips to ≈ 0.89 around q = 800 (~10 sessions) and recovers toward 0.96 around q = 3 500 (~44 sessions). "
-            "Across the entire profile VR < 1, but the gap closes at multi-week horizons — exactly where the "
+            "Across the entire profile VR < 1, but the gap closes at multi-week horizons - exactly where the "
             "push-response test will show positive ρ."
         ),
         slide_no=15, total=TOTAL,
     )
-    # 16 — VR by past 10/20/30/40 year lookbacks (replicates the reference)
+    # 16 - VR by past 10/20/30/40 year lookbacks (replicates the reference)
     slide_image_full(
         prs,
         title="Variance Ratio Test for TY: past 10/20/30/40 years",
@@ -877,25 +877,25 @@ def main() -> None:
         image=FIG_PRES / "repl_ty_vr_lookback.png",
         caption=(
             "How the VR profile depends on the lookback window. The Past-10-year curve crosses above 1 "
-            "around q ≈ 4 000 — Treasuries have been *trending* in the 2016–2026 sample. Longer lookbacks "
+            "around q ≈ 4 000 - Treasuries have been *trending* in the 2016–2026 sample. Longer lookbacks "
             "smooth this into the long-run profile, but the trend signal at multi-week horizons is preserved."
         ),
         slide_no=16, total=TOTAL,
     )
-    # 17 — VR by backward 10-year windows (replicates the reference)
+    # 17 - VR by backward 10-year windows (replicates the reference)
     slide_image_full(
         prs,
-        title="Variance Ratio Test by backward 10-year windows — TY",
+        title="Variance Ratio Test by backward 10-year windows - TY",
         section="Diagnostics",
         image=FIG_PRES / "repl_ty_vr_decade_windows.png",
         caption=(
             "Decade-by-decade decomposition. The 2016–2026 decade clearly trends at long q (VR > 1 above "
             "q ≈ 3 000). The 2006–2016 decade is the most mean-reverting (the QE/ZIRP era). The earlier "
-            "windows sit closer to the random-walk null — regime change is real and visible in the data."
+            "windows sit closer to the random-walk null - regime change is real and visible in the data."
         ),
         slide_no=17, total=TOTAL,
     )
-    # 18 — Push-response grid TY (replicates the reference)
+    # 18 - Push-response grid TY (replicates the reference)
     slide_image_full(
         prs,
         title="Push-Response Test for TY: short → medium horizons",
@@ -904,15 +904,15 @@ def main() -> None:
         caption=(
             "Conditional mean of the forward response, per push-bin, at twelve τ values from 1 to 350 bars. "
             "At τ = 1 the response is mean-reverting (negative slope). Around τ = 32–96 the slope flattens, "
-            "and from τ = 144 onwards the response acquires a clear negative slope on extreme pushes — "
+            "and from τ = 144 onwards the response acquires a clear negative slope on extreme pushes - "
             "the multi-week trend regime."
         ),
         slide_no=18, total=TOTAL,
     )
-    # 19 — Push-response combined diagram (the report figure)
+    # 19 - Push-response combined diagram (the report figure)
     slide_image_full(
         prs,
-        title="Evidence — Push-Response at the optimal horizon (TY vs BTC)",
+        title="Evidence - Push-Response at the optimal horizon (TY vs BTC)",
         section="Diagnostics",
         image=FIG_REPORT / "fig_push_response.png",
         caption=(
@@ -934,11 +934,11 @@ def main() -> None:
     slide_metrics_table(prs, 23, TOTAL)
     slide_image_full(
         prs,
-        title="TY — out-of-sample equity & portfolio position",
-        section="Primary Market — TY",
+        title="TY - out-of-sample equity & portfolio position",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_02_ty_equity_position.png",
         caption=(
-            "Channel WithDDControl on TY (10-yr Treasury futures) over 1987-06 → 2026-03 — "
+            "Channel WithDDControl on TY (10-yr Treasury futures) over 1987-06 → 2026-03 - "
             "155 quarterly walk-forward windows stitched, $100k initial equity. "
             "Net OOS profit $68 336 / Max DD $15 865 / Return on Account 4.31× / Sharpe 0.31 / 395 trades. "
             "Position panel shows long/short/flat state at bar resolution."
@@ -947,8 +947,8 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="TY — Chekhlov drawdown family",
-        section="Primary Market — TY",
+        title="TY - Chekhlov drawdown family",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_03_ty_drawdown_family.png",
         caption=(
             "Top: % off running peak. Bottom: $ off running peak. Max DD ≈ 11% / $15.9k. "
@@ -957,14 +957,14 @@ def main() -> None:
         ),
         slide_no=25, total=TOTAL,
     )
-    # NEW — % return distribution for TY (replaces the dollar-PnL hist on the deck)
+    # NEW - % return distribution for TY (replaces the dollar-PnL hist on the deck)
     slide_image_full(
         prs,
-        title="TY — out-of-sample trade % return distribution",
-        section="Primary Market — TY",
+        title="TY - out-of-sample trade % return distribution",
+        section="Primary Market - TY",
         image=FIG_PRES / "repl_ty_pct_returns.png",
         caption=(
-            "Per-trade % returns — left panel = price-move % captured per trade; right panel = "
+            "Per-trade % returns - left panel = price-move % captured per trade; right panel = "
             "equity-return % per trade (PnL / $100k). Mean equity-return per trade is −0.18% (small "
             "losing tail of −2.95%); winners reach +8.17% on the COVID flight-to-safety long."
         ),
@@ -972,39 +972,39 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="TY — out-of-sample dollar-PnL distribution",
-        section="Primary Market — TY",
+        title="TY - out-of-sample dollar-PnL distribution",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_04_ty_trade_distribution.png",
         caption=(
             "Same trades shown in dollar terms. Win rate 33%, average winner $1 265 vs average loser −$897. "
-            "The dollar view exaggerates outliers because the position size is fixed at one contract — "
+            "The dollar view exaggerates outliers because the position size is fixed at one contract - "
             "the % view above is the cleaner cross-market comparator."
         ),
         slide_no=27, total=TOTAL,
     )
     slide_image_full(
         prs,
-        title="TY — most profitable OOS trade (autopsy)",
-        section="Primary Market — TY",
+        title="TY - most profitable OOS trade (autopsy)",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_05_ty_best_trade.png",
         caption=(
             "21 Jan 2020 LONG 129.56 → 137.75 over 50 days (+$8 170). "
             "Channel breakout above the 1 920-bar high right as COVID drove a flight-to-safety bond rally. "
-            "Trailing-equity stop fired after the initial impulse decayed — textbook trend payoff."
+            "Trailing-equity stop fired after the initial impulse decayed - textbook trend payoff."
         ),
         slide_no=28, total=TOTAL,
     )
     slide_image_full(
         prs,
-        title="TY — worst OOS trade · why it got cooked",
-        section="Primary Market — TY",
+        title="TY - worst OOS trade · why it got cooked",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_06_ty_worst_trade.png",
         side_bullets=[
-            "22 Feb 2002 LONG @ 107.38 — broke above the 3 200-bar (~40-day) high.",
+            "22 Feb 2002 LONG @ 107.38 - broke above the 3 200-bar (~40-day) high.",
             "Treasuries reversed almost immediately on hawkish-Fed signals at the late-Feb FOMC.",
             "Price slid 2.93 pts in 12 days; trailing stop fired at $-2 952.",
             "Classic 'breakout caught at the local top' before mean-reversion fired.",
-            "Wide L = 3 200 channel made the per-bar stop physically distant — loss compounded before exit.",
+            "Wide L = 3 200 channel made the per-bar stop physically distant - loss compounded before exit.",
             "The push-response diagnostic for short horizons is near zero; some breakouts get faded.",
         ],
         caption="Source: Group 1 walk-forward (TF Data 5-min OHLC, $100k initial equity)",
@@ -1012,28 +1012,28 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="TY — walk-forward parameter stability",
-        section="Primary Market — TY",
+        title="TY - walk-forward parameter stability",
+        section="Primary Market - TY",
         image=FIG_PRES / "slide_07_ty_param_stability.png",
         caption=(
             "Channel length L converges to a tight cluster around 1 920 bars (≈ 24 trading days). "
-            "Drawdown stop S almost always at 1% of running equity. Optimiser does not flip wildly — "
+            "Drawdown stop S almost always at 1% of running equity. Optimiser does not flip wildly - "
             "the chosen objective (Net Profit / Max Drawdown) is well-behaved on TY."
         ),
         slide_no=30, total=TOTAL,
     )
 
-    slide_section_divider(prs, label="Secondary Market — BTC",
+    slide_section_divider(prs, label="Secondary Market - BTC",
                           big="Same framework, faster horizon",
                           slide_no=31, total=TOTAL)
 
     slide_image_full(
         prs,
-        title="BTC — out-of-sample equity & portfolio position",
-        section="Secondary Market — BTC",
+        title="BTC - out-of-sample equity & portfolio position",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_02_btc_equity_position.png",
         caption=(
-            "Channel WithDDControl on BTC (CME Bitcoin futures) over 2023-08 → 2026-02 — 7 quarterly "
+            "Channel WithDDControl on BTC (CME Bitcoin futures) over 2023-08 → 2026-02 - 7 quarterly "
             "OOS windows. Net OOS profit $536 397 / Max DD $131 729 / Return on Account 4.07× / "
             "Sharpe 3.01 / 1 094 trades. Equity grows from $100k to $636k driven by the 2024-25 cycle."
         ),
@@ -1041,24 +1041,24 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="BTC — Chekhlov drawdown family",
-        section="Secondary Market — BTC",
+        title="BTC - Chekhlov drawdown family",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_03_btc_drawdown_family.png",
         caption=(
-            "Max DD ≈ 22% / $131.7k. Recovery is fast — most underwater stretches are weeks, not "
+            "Max DD ≈ 22% / $131.7k. Recovery is fast - most underwater stretches are weeks, not "
             "months. CDD(α=0.05) ≈ $111.8k. Larger absolute dollar swings than TY, but realised "
             "vol is ~8× higher so the % drawdown footprint is comparable."
         ),
         slide_no=33, total=TOTAL,
     )
-    # NEW — % return distribution for BTC
+    # NEW - % return distribution for BTC
     slide_image_full(
         prs,
-        title="BTC — out-of-sample trade % return distribution",
-        section="Secondary Market — BTC",
+        title="BTC - out-of-sample trade % return distribution",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "repl_btc_pct_returns.png",
         caption=(
-            "Per-trade % returns — left panel = price-move % captured; right panel = equity-return %. "
+            "Per-trade % returns - left panel = price-move % captured; right panel = equity-return %. "
             "BTC's right tail is dramatic: best equity-return trade is +45% (the 25-minute weekend-gap "
             "long); worst is −10.6% (the channel-break short that BTC pumped through). Mean is +0.49%."
         ),
@@ -1066,11 +1066,11 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="BTC — out-of-sample dollar-PnL distribution",
-        section="Secondary Market — BTC",
+        title="BTC - out-of-sample dollar-PnL distribution",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_04_btc_trade_distribution.png",
         caption=(
-            "Win rate 42% with average winner $4 327 vs average loser −$2 285 — same right-skew as TY "
+            "Win rate 42% with average winner $4 327 vs average loser −$2 285 - same right-skew as TY "
             "but with a higher hit rate. Profit factor 1.37. The intraday push-response is positive "
             "at the right horizons, supporting the higher hit rate."
         ),
@@ -1078,8 +1078,8 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="BTC — most profitable OOS trade (autopsy)",
-        section="Secondary Market — BTC",
+        title="BTC - most profitable OOS trade (autopsy)",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_05_btc_best_trade.png",
         caption=(
             "02 Mar 2025 LONG 85 720 → 94 748 in 25 minutes (+$45 115). "
@@ -1090,30 +1090,30 @@ def main() -> None:
     )
     slide_image_full(
         prs,
-        title="BTC — worst OOS trade · why it got cooked",
-        section="Secondary Market — BTC",
+        title="BTC - worst OOS trade · why it got cooked",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_06_btc_worst_trade.png",
         side_bullets=[
-            "22 Aug 2025 SHORT @ 112 075 — broke below the 276-bar (1-day) low.",
+            "22 Aug 2025 SHORT @ 112 075 - broke below the 276-bar (1-day) low.",
             "Within 90 minutes BTC pumped $2 115 (+1.9%) against the position.",
             "Tight 1% drawdown stop fired at the second bar after the move ($114 190).",
-            "Channel breakout in BTC's mean-reverting 1-day regime — recurring failure mode.",
+            "Channel breakout in BTC's mean-reverting 1-day regime - recurring failure mode.",
             "The push-response diagram already flagged BTC as mean-reverting at the 1-day horizon "
             "(Spearman ρ = −0.38).",
-            "The −$10 600 loss is ≈ 8% of the OOS Max DD — paid once to stay in the longer-horizon trend regime.",
+            "The −$10 600 loss is ≈ 8% of the OOS Max DD - paid once to stay in the longer-horizon trend regime.",
         ],
         caption="Source: Group 1 walk-forward (TF Data 5-min OHLC, $100k initial equity)",
         slide_no=37, total=TOTAL,
     )
     slide_image_full(
         prs,
-        title="BTC — walk-forward parameter stability",
-        section="Secondary Market — BTC",
+        title="BTC - walk-forward parameter stability",
+        section="Secondary Market - BTC",
         image=FIG_PRES / "slide_07_btc_param_stability.png",
         caption=(
             "BTC has only 7 quarterly OOS windows (the sample's IS warmup eats ~4 years from inception). "
             "Optimiser cycles between L = 276 (1 day) in choppy regimes and L = 1 104 (4 days) in the "
-            "late-2025 trend phase. S* fixed at 1%. Instability is structural — BTC's regime is shifting."
+            "late-2025 trend phase. S* fixed at 1%. Instability is structural - BTC's regime is shifting."
         ),
         slide_no=38, total=TOTAL,
     )
@@ -1127,7 +1127,7 @@ def main() -> None:
         caption=(
             "Sharpe decay: TY 0.41 → 0.31 (-24%); BTC 4.52 → 3.01 (-33%). "
             "Profit-per-quarter decay: TY 26%, BTC 130% (BTC's IS objective favoured smaller L which "
-            "truncated the most explosive late-2024 trends — sample-specific, not a forward claim). "
+            "truncated the most explosive late-2024 trends - sample-specific, not a forward claim). "
             "Quarterly OOS hit rate: TY 54.8% (85/155), BTC 100% (7/7)."
         ),
         slide_no=39, total=TOTAL,

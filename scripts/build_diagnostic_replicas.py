@@ -1,6 +1,6 @@
 """
 Replicate (with Columbia theming) the five reference diagnostics charts the
-team has been working with — and add equivalents for BTC and a percentage-
+team has been working with - and add equivalents for BTC and a percentage-
 return trade distribution that the dollar-PnL histograms don't capture.
 
 Outputs into report/presentation/figures/repl_*.png.
@@ -82,7 +82,7 @@ def _save(fig, name):
     return out
 
 
-def _credit(ax, source="Source: Group 1 — TF Data 5-min OHLC"):
+def _credit(ax, source="Source: Group 1 - TF Data 5-min OHLC"):
     ax.text(0.0, -0.18, source, transform=ax.transAxes, ha="left", va="top",
             fontsize=8, color=COL_GREY)
 
@@ -105,7 +105,7 @@ def implied_yield(price: np.ndarray) -> np.ndarray:
     coupon = 3.0
     nper = 20
     par = 100.0
-    # Newton iteration — vectorised
+    # Newton iteration - vectorised
     y = np.full_like(price, 0.05)  # 5% start
     for _ in range(40):
         # f(y) = sum_{i=1..20} c/(1+y/2)^i + par/(1+y/2)^20 - P
@@ -137,7 +137,7 @@ def figure_ty_price_yield():
     fig, axes = plt.subplots(2, 1, figsize=(11.5, 6.6), sharex=True)
     axes[0].plot(s.index, s.values, color=COL_NAVY, lw=1.0)
     axes[0].fill_between(s.index, s.values, s.min(), color=COL_BLUE, alpha=0.20)
-    axes[0].set_title("TY 10-year Treasury futures — daily close",
+    axes[0].set_title("TY 10-year Treasury futures - daily close",
                       color=COL_NAVY, fontsize=13, loc="left")
     axes[0].set_ylabel("TY price (points)")
 
@@ -233,12 +233,12 @@ def variance_ratio_curve(prices: np.ndarray, q_values: np.ndarray) -> np.ndarray
 def figure_vr_curve(market: str):
     if market == "TY":
         prices = _load_close("TY-5minHLV.csv").values
-        title = "Variance Ratio vs q — TY 5-min price differences"
+        title = "Variance Ratio vs q - TY 5-min price differences"
         out = "repl_ty_vr_curve.png"
         color = COL_NAVY
     else:
         prices = _load_close("BTC-5minHLV.csv").values
-        title = "Variance Ratio vs q — BTC 5-min price differences"
+        title = "Variance Ratio vs q - BTC 5-min price differences"
         out = "repl_btc_vr_curve.png"
         color = COL_GOLD
 
@@ -269,13 +269,13 @@ def figure_vr_decade_windows(market: str):
         s = _load_close("TY-5minHLV.csv")
         windows = [(2016, 2026), (2006, 2016), (1996, 2006), (1986, 1996)]
         out = "repl_ty_vr_decade_windows.png"
-        title = "Variance Ratio by backward 10-year windows — TY 5-min"
+        title = "Variance Ratio by backward 10-year windows - TY 5-min"
         cmap = [COL_NAVY, COL_GOLD, COL_GREEN, COL_RED]
     else:
         s = _load_close("BTC-5minHLV.csv")
         windows = [(2024, 2026), (2022, 2024), (2020, 2022), (2018, 2020)]
         out = "repl_btc_vr_decade_windows.png"
-        title = "Variance Ratio by backward 2-year windows — BTC 5-min"
+        title = "Variance Ratio by backward 2-year windows - BTC 5-min"
         cmap = [COL_NAVY, COL_GOLD, COL_GREEN, COL_RED]
 
     qs = np.unique(np.concatenate([
@@ -333,17 +333,17 @@ def figure_ty_vr_lookback():
 
 
 # ----------------------------------------------------------------------------
-# 6. % return per trade — distribution
+# 6. % return per trade - distribution
 # ----------------------------------------------------------------------------
 def figure_pct_returns(market: str):
     if market == "TY":
         ledger = pd.read_csv(WF / "TY_5m" / "TY_5m_walkforward_ledger.csv")
-        title = "TY (10-yr Treasury futures) — out-of-sample trade % return distribution"
+        title = "TY (10-yr Treasury futures) - out-of-sample trade % return distribution"
         out = "repl_ty_pct_returns.png"
         color = COL_NAVY
     else:
         ledger = pd.read_csv(WF / "BTC_5m" / "BTC_5m_walkforward_ledger.csv")
-        title = "BTC (CME Bitcoin futures) — out-of-sample trade % return distribution"
+        title = "BTC (CME Bitcoin futures) - out-of-sample trade % return distribution"
         out = "repl_btc_pct_returns.png"
         color = COL_GOLD
 
@@ -351,9 +351,9 @@ def figure_pct_returns(market: str):
     direction = ledger["direction"].astype(int)
     entry = ledger["entry_price"].astype(float)
     exit_ = ledger["exit_price"].astype(float)
-    # 1) Price-move % per trade — the underlying's directional move captured
+    # 1) Price-move % per trade - the underlying's directional move captured
     pct_price = (exit_ - entry) / entry * 100.0 * direction
-    # 2) Equity-return % per trade — pnl as % of $100k starting capital
+    # 2) Equity-return % per trade - pnl as % of $100k starting capital
     pct_equity = ledger["pnl"].astype(float) / 100_000 * 100.0
 
     fig, axes = plt.subplots(1, 2, figsize=(13.0, 5.0))

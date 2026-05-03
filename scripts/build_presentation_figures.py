@@ -20,7 +20,7 @@ from matplotlib.patches import FancyBboxPatch
 from matplotlib.ticker import FuncFormatter
 
 # ----------------------------------------------------------------------------
-# Columbia palette — same as the canonical report
+# Columbia palette - same as the canonical report
 # ----------------------------------------------------------------------------
 COLUMBIA_BLUE = "#B9D9EB"
 COLUMBIA_NAVY = "#012169"
@@ -81,7 +81,7 @@ def _save(fig: plt.Figure, name: str) -> Path:
     return out
 
 
-def _credit(ax: plt.Axes, source: str = "Source: Group 1 walk-forward — TF Data 5-min OHLC") -> None:
+def _credit(ax: plt.Axes, source: str = "Source: Group 1 walk-forward - TF Data 5-min OHLC") -> None:
     ax.text(
         0.0,
         -0.18,
@@ -221,7 +221,7 @@ def figure_metrics_table() -> None:
     # Title
     fig.text(0.07, 0.94, "Performance Metrics", color=COLUMBIA_NAVY, fontsize=18, fontweight="bold")
 
-    # Column headers — push label column narrower, data columns to the right
+    # Column headers - push label column narrower, data columns to the right
     col_labels = [c[0] for c in col_keys]
     label_x = 0.10
     data_xs = np.linspace(0.46, 0.94, len(col_labels))
@@ -287,7 +287,7 @@ def figure_market_equity_with_position(market: str) -> None:
     ax_pos = fig.add_subplot(gs[0])
     ax_eq = fig.add_subplot(gs[2], sharex=ax_pos)
 
-    # Position panel — coloured band: long=green, short=red, flat=grey
+    # Position panel - coloured band: long=green, short=red, flat=grey
     long_mask = pos == 1
     short_mask = pos == -1
     flat_mask = pos == 0
@@ -298,7 +298,7 @@ def figure_market_equity_with_position(market: str) -> None:
     ax_pos.fill_between(times, 0, 1, where=flat_mask, color=LIGHT_GREY, step="mid", alpha=0.85, label="Flat")
     ax_pos.set_yticks([])
     ax_pos.set_ylim(0, 1)
-    ax_pos.set_title(f"{cfg['label']} — portfolio position", color=COLUMBIA_NAVY, fontsize=12, loc="left")
+    ax_pos.set_title(f"{cfg['label']} - portfolio position", color=COLUMBIA_NAVY, fontsize=12, loc="left")
     ax_pos.legend(loc="upper right", ncol=3, fontsize=8.5)
     ax_pos.tick_params(axis="x", labelbottom=False)
     for s in ("left", "top", "right"):
@@ -308,7 +308,7 @@ def figure_market_equity_with_position(market: str) -> None:
     ax_eq.plot(times, eq["OOS_Equity"], color=cfg["color"], lw=1.4)
     ax_eq.fill_between(times, 100_000.0, eq["OOS_Equity"], color=cfg["color"], alpha=0.10)
     ax_eq.axhline(100_000.0, color=COLUMBIA_GREY, lw=0.8, ls="--")
-    ax_eq.set_title(f"{cfg['label']} — out-of-sample equity curve", color=COLUMBIA_NAVY, fontsize=12, loc="left")
+    ax_eq.set_title(f"{cfg['label']} - out-of-sample equity curve", color=COLUMBIA_NAVY, fontsize=12, loc="left")
     ax_eq.set_ylabel("Equity ($)")
     ax_eq.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v/1000:,.0f}k"))
     ax_eq.set_xlabel("Date")
@@ -351,14 +351,14 @@ def figure_market_drawdown(market: str) -> None:
     ax_p.plot(eq["DateTime"], uw_pct, color=cfg["color"], lw=1.0)
     ax_p.axhline(0, color=COLUMBIA_INK, lw=0.6)
     ax_p.axhline(-mdd_pct, color=COLUMBIA_RED, lw=0.8, ls="--", label=f"Max DD = -{mdd_pct:,.2f}%")
-    ax_p.set_title(f"{cfg['label']} — % drawdown vs running peak", color=COLUMBIA_NAVY, fontsize=12, loc="left")
+    ax_p.set_title(f"{cfg['label']} - % drawdown vs running peak", color=COLUMBIA_NAVY, fontsize=12, loc="left")
     ax_p.set_ylabel("% off peak")
     ax_p.legend(loc="lower right")
 
     ax_d.fill_between(eq["DateTime"], uw_dollar, 0, color=cfg["color"], alpha=0.30)
     ax_d.plot(eq["DateTime"], uw_dollar, color=cfg["color"], lw=1.0)
     ax_d.axhline(0, color=COLUMBIA_INK, lw=0.6)
-    ax_d.set_title(f"{cfg['label']} — $ drawdown vs running peak", color=COLUMBIA_NAVY, fontsize=12, loc="left")
+    ax_d.set_title(f"{cfg['label']} - $ drawdown vs running peak", color=COLUMBIA_NAVY, fontsize=12, loc="left")
     ax_d.set_ylabel("$ off peak")
     ax_d.set_xlabel("Date")
     ax_d.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v/1000:,.0f}k"))
@@ -391,7 +391,7 @@ def figure_market_trade_distribution(market: str) -> None:
     ax.axvline(0, color=COLUMBIA_INK, lw=0.8)
     ax.axvline(float(pnl.mean()), color=COLUMBIA_NAVY, lw=1.4, ls="--",
                label=f"Mean PnL = ${pnl.mean():,.0f}")
-    ax.set_title(f"{cfg['label']} — out-of-sample trade PnL distribution",
+    ax.set_title(f"{cfg['label']} - out-of-sample trade PnL distribution",
                  color=COLUMBIA_NAVY, fontsize=12, loc="left")
     ax.set_xlabel("PnL ($)")
     ax.set_ylabel("Trade count")
@@ -416,7 +416,7 @@ def _slice_ohlc_around(market: str, t0: pd.Timestamp, t1: pd.Timestamp, pad_pct:
     """Slice OHLC around a trade. We use an asymmetric pre/post pad and
     enforce a minimum window so very short trades (e.g. BTC's 25-minute
     breakout) still show enough pre-trade context for the chart to be
-    legible — in particular, gaps and prior-session levels relevant to
+    legible - in particular, gaps and prior-session levels relevant to
     the channel break.
     """
     ohlc = load_ohlc(market)
@@ -492,14 +492,14 @@ def figure_best_worst(market: str) -> None:
     if market == "TY":
         why_best = (
             "Why it worked\n"
-            "• Entered LONG on 21 Jan 2020 — TY broke above the 1920-bar high\n"
+            "• Entered LONG on 21 Jan 2020 - TY broke above the 1920-bar high\n"
             "• Held 50 days as COVID drove a flight-to-safety bond rally\n"
             "• Exited 10 Mar 2020 on the equity trailing-stop after a 6.3pt move\n"
             "• Channel breakout + slow stop = textbook trend-following payoff"
         )
         why_worst = (
             "Why it got cooked\n"
-            "• Entered LONG on 22 Feb 2002 — broke above a 3200-bar (40-day) high\n"
+            "• Entered LONG on 22 Feb 2002 - broke above a 3200-bar (40-day) high\n"
             "• Treasuries reversed almost immediately on hawkish Fed signals\n"
             "• Price slid 2.93pt in 12 days; trailing-stop fired at $-2,952 loss\n"
             "• Classic 'breakout caught at the local top before mean-reversion'\n"
@@ -508,14 +508,14 @@ def figure_best_worst(market: str) -> None:
     else:  # BTC
         why_best = (
             "Why it worked\n"
-            "• Entered LONG on 02 Mar 2025 17:05 — broke above the 276-bar (1d) high\n"
+            "• Entered LONG on 02 Mar 2025 17:05 - broke above the 276-bar (1d) high\n"
             "• 25 minutes later BTC ripped from $85,720 → $94,748\n"
             "• Trailing-stop never fired; closed by next reversal signal\n"
             "• Crypto's late-2025 trend cycle paid this trade $45k in 5 bars"
         )
         why_worst = (
             "Why it got cooked\n"
-            "• Entered SHORT on 22 Aug 2025 07:35 — broke below the 276-bar low\n"
+            "• Entered SHORT on 22 Aug 2025 07:35 - broke below the 276-bar low\n"
             "• Within 90 minutes BTC pumped $2,115 (+1.9%) against the position\n"
             "• Tight 1% drawdown stop fired at $112,075 → $114,190\n"
             "• Channel breakout in a fast-mean-reverting regime is a common failure\n"
@@ -524,12 +524,12 @@ def figure_best_worst(market: str) -> None:
 
     # Two figures: best & worst, separately
     fig_best, ax = plt.subplots(figsize=(11.5, 5.4))
-    _draw_trade(ax, market, best, f"{cfg['label']} — most profitable OOS trade", why_best, cfg["color"])
+    _draw_trade(ax, market, best, f"{cfg['label']} - most profitable OOS trade", why_best, cfg["color"])
     _credit(ax)
     _save(fig_best, f"slide_05_{market.lower()}_best_trade.png")
 
     fig_worst, ax = plt.subplots(figsize=(11.5, 5.4))
-    _draw_trade(ax, market, worst, f"{cfg['label']} — worst OOS trade", why_worst, cfg["color"])
+    _draw_trade(ax, market, worst, f"{cfg['label']} - worst OOS trade", why_worst, cfg["color"])
     _credit(ax)
     _save(fig_worst, f"slide_06_{market.lower()}_worst_trade.png")
 
@@ -544,12 +544,12 @@ def figure_market_param_stability(market: str) -> None:
 
     fig, axes = plt.subplots(2, 1, figsize=(11.5, 5.6), sharex=True)
     axes[0].plot(df["Period"], df["L"], color=cfg["color"], marker="o", ms=3, lw=1.0)
-    axes[0].set_title(f"{cfg['label']} — channel length L per quarterly OOS period",
+    axes[0].set_title(f"{cfg['label']} - channel length L per quarterly OOS period",
                       color=COLUMBIA_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("L (5-min bars)")
 
     axes[1].plot(df["Period"], df["S"], color=COLUMBIA_RED, marker="s", ms=3, lw=1.0)
-    axes[1].set_title(f"{cfg['label']} — drawdown stop S per quarterly OOS period",
+    axes[1].set_title(f"{cfg['label']} - drawdown stop S per quarterly OOS period",
                       color=COLUMBIA_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Walk-forward period #")
     axes[1].set_ylabel("S (fraction)")

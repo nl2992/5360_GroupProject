@@ -53,7 +53,7 @@ def load_ohlc(
     if fallback_synthetic:
         print(
             f"⚠ No data file found for {spec.ticker} "
-            f"(tried {candidates}) — using synthetic series."
+            f"(tried {candidates}) - using synthetic series."
         )
         return _synthetic_series(ticker, bar_minutes=int(bar_minutes or DEFAULT_BAR_MINUTES))
 

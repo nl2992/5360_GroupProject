@@ -1,6 +1,6 @@
-# MATH GR5360 — Final Project
+# MATH GR5360 - Final Project
 
-**Group 1 — Columbia MAFN — Spring 2026**
+**Group 1 - Columbia MAFN - Spring 2026**
 
 Channel WithDDControl trend-following on TY (10-year US Treasury futures) and BTC (CME Bitcoin futures), with full walk-forward optimisation, Lo–MacKinlay variance-ratio diagnostics, push–response diagnostics, and a Python ↔ C++ parity-tested engine.
 
@@ -78,8 +78,8 @@ The OOS-selected breakout lengths reflect this: TY converges to `L* ≈ 1920` (�
 
 ## Authors
 
-Group 1 — Columbia MAFN — MATH GR5360 (Spring 2026).
+Group 1 - Columbia MAFN - MATH GR5360 (Spring 2026).
 
 ---
 
-*Submission for MATH GR5360 — Mathematical Methods in Financial Price Analysis — due 2 May 2026.*
+*Submission for MATH GR5360 - Mathematical Methods in Financial Price Analysis - due 2 May 2026.*

@@ -76,10 +76,10 @@ def _save(fig, name):
     return p
 
 
-def _credit(ax, txt="Source: Group 1 — TF Data 1-min OHLC, $100k initial equity"):
+def _credit(ax, txt="Source: Group 1 - TF Data 1-min OHLC, $100k initial equity"):
     ax.text(0.0, -0.16, txt, transform=ax.transAxes, ha="left", va="top",
             fontsize=8, color=COL_GREY)
-    ax.text(0.99, -0.16, "MATH GR5360 — Group 1 — Columbia MAFN",
+    ax.text(0.99, -0.16, "MATH GR5360 - Group 1 - Columbia MAFN",
             transform=ax.transAxes, ha="right", va="top",
             fontsize=8, color=COL_GREY)
 
@@ -132,7 +132,7 @@ def render_kv_table(rows: list[tuple[str, list[str]]], col_headers: list[str],
                     label_w: float = 0.30):
     """Bloomberg-style key/value table. Columns are right-aligned at
     positions chosen so each cell has at least max_text_width + a small
-    gap of horizontal room — avoids the prior 'S column bleeds into
+    gap of horizontal room - avoids the prior 'S column bleeds into
     NetProfit' overlap."""
     fig, ax = plt.subplots(figsize=figsize)
     ax.set_axis_off()
@@ -192,13 +192,13 @@ def render_kv_table(rows: list[tuple[str, list[str]]], col_headers: list[str],
                                       color=COL_LIGHT, lw=0.5))
 
     fig.text(0.06, 0.04, source, color=COL_GREY, fontsize=8.5)
-    fig.text(0.97, 0.04, "MATH GR5360 — Group 1 — Columbia MAFN",
+    fig.text(0.97, 0.04, "MATH GR5360 - Group 1 - Columbia MAFN",
              color=COL_GREY, fontsize=8.5, ha="right")
     _save(fig, name)
 
 
 # ---------------------------------------------------------------------------
-# 00 — Headline KPI table
+# 00 - Headline KPI table
 # ---------------------------------------------------------------------------
 def fig_00_headline():
     s = load_summary()
@@ -218,7 +218,7 @@ def fig_00_headline():
     render_kv_table(
         rows,
         col_headers=["L", "S", "NetProfit", "NetMaxDD", "NetRoA", "Trades"],
-        title="TY 1-minute — headline run summary",
+        title="TY 1-minute - headline run summary",
         source="Source: results_cpp_ty_1m/tf_backtest_summary.csv",
         name="00_headline_results_table.png",
         label_w=0.32,
@@ -226,7 +226,7 @@ def fig_00_headline():
 
 
 # ---------------------------------------------------------------------------
-# 01 — Growth of $1
+# 01 - Growth of $1
 # ---------------------------------------------------------------------------
 def fig_01_growth():
     eq_oos = load_eq("TY_1m", "walkforward")
@@ -241,7 +241,7 @@ def fig_01_growth():
         ax.plot(eq_full["DateTime"], eq_full["Equity"] / 100_000.0,
                 color=COL_GOLD, lw=1.4, label="Full sample (in-sample optimum)")
     ax.axhline(1.0, color=COL_GREY, lw=0.8, ls="--", label="$1 baseline")
-    ax.set_title("TY 1-minute — growth of $1 (OOS vs full sample)",
+    ax.set_title("TY 1-minute - growth of $1 (OOS vs full sample)",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.set_xlabel("Date")
     ax.set_ylabel("Multiple of $1")
@@ -251,7 +251,7 @@ def fig_01_growth():
 
 
 # ---------------------------------------------------------------------------
-# 02 — Underwater (% off peak)
+# 02 - Underwater (% off peak)
 # ---------------------------------------------------------------------------
 def _underwater_pct(eq: pd.Series) -> pd.Series:
     return (eq - eq.cummax()) / eq.cummax() * 100
@@ -265,7 +265,7 @@ def fig_02_underwater():
     axes[0].fill_between(oos["DateTime"], uw_oos, 0, color=COL_NAVY, alpha=0.45)
     axes[0].plot(oos["DateTime"], uw_oos, color=COL_NAVY, lw=1.0)
     axes[0].axhline(0, color=COL_INK, lw=0.6)
-    axes[0].set_title("TY 1-minute — walk-forward OOS underwater (%)",
+    axes[0].set_title("TY 1-minute - walk-forward OOS underwater (%)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("% off peak")
 
@@ -274,7 +274,7 @@ def fig_02_underwater():
     axes[1].fill_between(full["DateTime"], uw_full, 0, color=COL_GOLD, alpha=0.45)
     axes[1].plot(full["DateTime"], uw_full, color=COL_GOLD, lw=1.0)
     axes[1].axhline(0, color=COL_INK, lw=0.6)
-    axes[1].set_title("TY 1-minute — full-sample underwater (%)",
+    axes[1].set_title("TY 1-minute - full-sample underwater (%)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_ylabel("% off peak")
     axes[1].set_xlabel("Date")
@@ -283,7 +283,7 @@ def fig_02_underwater():
 
 
 # ---------------------------------------------------------------------------
-# 03 — Quarterly performance
+# 03 - Quarterly performance
 # ---------------------------------------------------------------------------
 def fig_03_quarterly():
     p = load_params("TY_1m")
@@ -291,7 +291,7 @@ def fig_03_quarterly():
     colors = [COL_GREEN if x > 0 else COL_RED for x in p["OOS_Profit"]]
     axes[0].bar(p["Period"], p["OOS_Profit"], color=colors, edgecolor="none", alpha=0.85)
     axes[0].axhline(0, color=COL_INK, lw=0.6)
-    axes[0].set_title("TY 1-minute — quarterly OOS net profit ($)",
+    axes[0].set_title("TY 1-minute - quarterly OOS net profit ($)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("Profit ($)")
     _money(axes[0].yaxis)
@@ -300,7 +300,7 @@ def fig_03_quarterly():
                 color=[COL_GREEN if x > 0 else COL_RED for x in p["OOS_Objective"]],
                 edgecolor="none", alpha=0.85)
     axes[1].axhline(0, color=COL_INK, lw=0.6)
-    axes[1].set_title("TY 1-minute — quarterly OOS objective (Profit / |MaxDD|)",
+    axes[1].set_title("TY 1-minute - quarterly OOS objective (Profit / |MaxDD|)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Walk-forward period #")
     axes[1].set_ylabel("OOS Profit / |MaxDD|")
@@ -309,18 +309,18 @@ def fig_03_quarterly():
 
 
 # ---------------------------------------------------------------------------
-# 04 — Parameter path
+# 04 - Parameter path
 # ---------------------------------------------------------------------------
 def fig_04_param_path():
     p = load_params("TY_1m")
     fig, axes = plt.subplots(2, 1, figsize=(11.5, 5.6), sharex=True)
     axes[0].plot(p["Period"], p["L"], color=COL_NAVY, marker="o", ms=3, lw=1.0)
-    axes[0].set_title("TY 1-minute — chosen channel length L per quarter",
+    axes[0].set_title("TY 1-minute - chosen channel length L per quarter",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("L (1-min bars)")
 
     axes[1].plot(p["Period"], p["S"], color=COL_RED, marker="s", ms=3, lw=1.0)
-    axes[1].set_title("TY 1-minute — chosen drawdown stop S per quarter",
+    axes[1].set_title("TY 1-minute - chosen drawdown stop S per quarter",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Walk-forward period #")
     axes[1].set_ylabel("S (fraction)")
@@ -329,7 +329,7 @@ def fig_04_param_path():
 
 
 # ---------------------------------------------------------------------------
-# 05 — Parameter frequency
+# 05 - Parameter frequency
 # ---------------------------------------------------------------------------
 def fig_05_param_freq():
     p = load_params("TY_1m")
@@ -337,7 +337,7 @@ def fig_05_param_freq():
     l_counts = p["L"].value_counts().sort_index()
     axes[0].bar(l_counts.index.astype(str), l_counts.values,
                 color=COL_NAVY, alpha=0.85, edgecolor="white")
-    axes[0].set_title("TY 1-minute — frequency of chosen L",
+    axes[0].set_title("TY 1-minute - frequency of chosen L",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_xlabel("L (1-min bars)")
     axes[0].set_ylabel("Walk-forward periods (count)")
@@ -345,7 +345,7 @@ def fig_05_param_freq():
     s_counts = p["S"].value_counts().sort_index()
     axes[1].bar(s_counts.index.astype(str), s_counts.values,
                 color=COL_GOLD, alpha=0.85, edgecolor="white")
-    axes[1].set_title("TY 1-minute — frequency of chosen S",
+    axes[1].set_title("TY 1-minute - frequency of chosen S",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("S (fraction)")
     axes[1].set_ylabel("Walk-forward periods (count)")
@@ -354,7 +354,7 @@ def fig_05_param_freq():
 
 
 # ---------------------------------------------------------------------------
-# 06 — Trade distributions
+# 06 - Trade distributions
 # ---------------------------------------------------------------------------
 def fig_06_trade_dist():
     ldg = load_ledger("TY_1m", "walkforward")
@@ -366,14 +366,14 @@ def fig_06_trade_dist():
     axes[0].axvline(0, color=COL_INK, lw=0.8)
     axes[0].axvline(pnl.mean(), color=COL_NAVY, lw=1.4, ls="--",
                     label=f"Mean PnL ${pnl.mean():,.0f}")
-    axes[0].set_title("TY 1-minute — OOS trade PnL distribution ($)",
+    axes[0].set_title("TY 1-minute - OOS trade PnL distribution ($)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_xlabel("PnL ($)"); axes[0].set_ylabel("Trade count")
     axes[0].legend(loc="upper right")
 
     dur = ldg["duration_bars"]
     axes[1].hist(dur, bins=40, color=COL_NAVY, alpha=0.85)
-    axes[1].set_title("TY 1-minute — OOS trade duration (1-min bars)",
+    axes[1].set_title("TY 1-minute - OOS trade duration (1-min bars)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Duration (1-min bars)")
     axes[1].set_ylabel("Trade count")
@@ -382,7 +382,7 @@ def fig_06_trade_dist():
 
 
 # ---------------------------------------------------------------------------
-# 07 — Reference split (Matlab-style)
+# 07 - Reference split (Matlab-style)
 # ---------------------------------------------------------------------------
 def fig_07_reference_split():
     s = load_summary()
@@ -407,14 +407,14 @@ def fig_07_reference_split():
         ax.set_title(lbl, color=COL_NAVY, fontsize=11, loc="left")
         if "$" in lbl:
             _money(ax.yaxis)
-    fig.suptitle("TY 1-minute — Matlab-style reference split (L=11200, S=0.04)",
+    fig.suptitle("TY 1-minute - Matlab-style reference split (L=11200, S=0.04)",
                  color=COL_NAVY, fontsize=14, fontweight="bold", y=1.02)
     _credit(axes[-1])
     _save(fig, "07_reference_split_comparison.png")
 
 
 # ---------------------------------------------------------------------------
-# 08 — Quarterly extremes (top/bottom 10)
+# 08 - Quarterly extremes (top/bottom 10)
 # ---------------------------------------------------------------------------
 def fig_08_quarter_extremes():
     p = load_params("TY_1m").sort_values("OOS_Profit")
@@ -422,14 +422,14 @@ def fig_08_quarter_extremes():
     top = p.tail(10).iloc[::-1]
     fig, axes = plt.subplots(1, 2, figsize=(13.0, 5.0))
     axes[0].barh(top["Period"].astype(str), top["OOS_Profit"], color=COL_GREEN, alpha=0.85)
-    axes[0].set_title("TY 1-minute — top 10 OOS quarters by profit",
+    axes[0].set_title("TY 1-minute - top 10 OOS quarters by profit",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_xlabel("OOS profit ($)"); axes[0].invert_yaxis()
     _money(axes[0].xaxis); axes[0].set_ylabel("Walk-forward period #")
 
     axes[1].barh(bottom["Period"].astype(str), bottom["OOS_Profit"],
                  color=COL_RED, alpha=0.85)
-    axes[1].set_title("TY 1-minute — bottom 10 OOS quarters by profit",
+    axes[1].set_title("TY 1-minute - bottom 10 OOS quarters by profit",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("OOS profit ($)"); axes[1].invert_yaxis()
     _money(axes[1].xaxis); axes[1].set_ylabel("Walk-forward period #")
@@ -438,7 +438,7 @@ def fig_08_quarter_extremes():
 
 
 # ---------------------------------------------------------------------------
-# 09 — Parity table
+# 09 - Parity table
 # ---------------------------------------------------------------------------
 def fig_09_parity():
     df = load_parity(PARITY)
@@ -460,7 +460,7 @@ def fig_09_parity():
         rows,
         col_headers=["Py Profit", "C++ Profit", "Py MaxDD",
                      "C++ MaxDD", "Py RoA", "C++ RoA", "≤10%"],
-        title="TY 1-minute — Python ↔ C++ parity",
+        title="TY 1-minute - Python ↔ C++ parity",
         source="Source: results_py_ty_1m/python_cpp_fidelity_comparison.csv",
         name="09_parity_table.png",
         figsize=(13.0, 5.5),
@@ -469,7 +469,7 @@ def fig_09_parity():
 
 
 # ---------------------------------------------------------------------------
-# 10 — 1m vs 5m headline comparison
+# 10 - 1m vs 5m headline comparison
 # ---------------------------------------------------------------------------
 def fig_10_interval_table():
     s_1m = load_summary().set_index("RunType")
@@ -502,7 +502,7 @@ def fig_10_interval_table():
         rows,
         col_headers=["1m Profit", "5m Profit", "1m MaxDD",
                      "5m MaxDD", "1m RoA", "5m RoA"],
-        title="TY 1-minute vs 5-minute — headline comparison",
+        title="TY 1-minute vs 5-minute - headline comparison",
         source="Sources: results_cpp_ty_1m/tf_backtest_summary.csv  +  results_compare/TY_5m/",
         name="10_interval_comparison_table.png",
         figsize=(13.0, 5.0),
@@ -511,7 +511,7 @@ def fig_10_interval_table():
 
 
 # ---------------------------------------------------------------------------
-# 11 — Growth of $1 1m vs 5m
+# 11 - Growth of $1 1m vs 5m
 # ---------------------------------------------------------------------------
 def fig_11_growth_compare():
     eq1 = load_eq("TY_1m", "walkforward")
@@ -522,7 +522,7 @@ def fig_11_growth_compare():
     ax.plot(eq5["DateTime"], eq5["OOS_Equity"] / 100_000, color=COL_GOLD, lw=1.4,
             label="TY 5-min OOS")
     ax.axhline(1.0, color=COL_GREY, lw=0.8, ls="--", label="$1 baseline")
-    ax.set_title("TY — walk-forward OOS growth of $1: 1-min vs 5-min",
+    ax.set_title("TY - walk-forward OOS growth of $1: 1-min vs 5-min",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.set_xlabel("Date"); ax.set_ylabel("Multiple of $1")
     ax.legend(loc="upper left")
@@ -539,7 +539,7 @@ def fig_12_underwater_compare():
     ax.fill_between(eq5["DateTime"], _underwater_pct(eq5["OOS_Equity"]),
                     0, color=COL_GOLD, alpha=0.45, label="5-min OOS")
     ax.axhline(0, color=COL_INK, lw=0.6)
-    ax.set_title("TY — walk-forward OOS underwater (%): 1-min vs 5-min",
+    ax.set_title("TY - walk-forward OOS underwater (%): 1-min vs 5-min",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.set_xlabel("Date"); ax.set_ylabel("% off peak")
     ax.legend(loc="lower left")
@@ -567,7 +567,7 @@ def fig_13_oos_metric_compare():
     ax.bar(x + w / 2, v5, w, color=COL_GOLD, label="5-min")
     ax.set_xticks(x, [m for m, _ in metrics], rotation=20, ha="right")
     ax.axhline(0, color=COL_INK, lw=0.6)
-    ax.set_title("TY OOS metrics — 1-min vs 5-min",
+    ax.set_title("TY OOS metrics - 1-min vs 5-min",
                  color=COL_NAVY, fontsize=14, loc="left")
     ax.legend(loc="upper right")
     _credit(ax)
@@ -581,13 +581,13 @@ def fig_14_quarterly_compare():
     axes[0].bar(p1["Period"], p1["OOS_Profit"], color=COL_NAVY, alpha=0.85, edgecolor="none",
                 label="1-min")
     axes[0].axhline(0, color=COL_INK, lw=0.6)
-    axes[0].set_title("TY OOS profit per quarter — 1-min", color=COL_NAVY, fontsize=12, loc="left")
+    axes[0].set_title("TY OOS profit per quarter - 1-min", color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("Profit ($)"); _money(axes[0].yaxis)
 
     axes[1].bar(p5["Period"], p5["OOS_Profit"], color=COL_GOLD, alpha=0.85, edgecolor="none",
                 label="5-min")
     axes[1].axhline(0, color=COL_INK, lw=0.6)
-    axes[1].set_title("TY OOS profit per quarter — 5-min", color=COL_NAVY, fontsize=12, loc="left")
+    axes[1].set_title("TY OOS profit per quarter - 5-min", color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Walk-forward period #")
     axes[1].set_ylabel("Profit ($)"); _money(axes[1].yaxis)
     _credit(axes[1])
@@ -601,14 +601,14 @@ def fig_15_parameter_compare():
     axes[0].plot(p1["Period"], p1["L"], color=COL_NAVY, marker="o", ms=3, lw=1.0, label="1-min L")
     axes[0].plot(p5["Period"], p5["L"] * 5, color=COL_GOLD, marker="s", ms=3, lw=1.0,
                  label="5-min L × 5")
-    axes[0].set_title("TY chosen L per quarter — 1-min vs 5-min (×5 to align time-scale)",
+    axes[0].set_title("TY chosen L per quarter - 1-min vs 5-min (×5 to align time-scale)",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_ylabel("L (1-min equivalent bars)")
     axes[0].legend(loc="upper right")
 
     axes[1].plot(p1["Period"], p1["S"], color=COL_NAVY, marker="o", ms=3, lw=1.0, label="1-min S")
     axes[1].plot(p5["Period"], p5["S"], color=COL_GOLD, marker="s", ms=3, lw=1.0, label="5-min S")
-    axes[1].set_title("TY chosen S per quarter — 1-min vs 5-min",
+    axes[1].set_title("TY chosen S per quarter - 1-min vs 5-min",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("Walk-forward period #")
     axes[1].set_ylabel("S (fraction)")
@@ -629,7 +629,7 @@ def fig_16_distribution_compare():
     axes[0].axvline(0, color=COL_INK, lw=0.8)
     axes[0].axvline(pct1.mean(), color=COL_NAVY, lw=1.4, ls="--",
                     label=f"mean = {pct1.mean():+.2f}%")
-    axes[0].set_title("TY 1-minute — equity-return % per trade",
+    axes[0].set_title("TY 1-minute - equity-return % per trade",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[0].set_xlabel("PnL / $100k × 100%")
     axes[0].set_ylabel("Trade count")
@@ -640,7 +640,7 @@ def fig_16_distribution_compare():
     axes[1].axvline(0, color=COL_INK, lw=0.8)
     axes[1].axvline(pct5.mean(), color=COL_NAVY, lw=1.4, ls="--",
                     label=f"mean = {pct5.mean():+.2f}%")
-    axes[1].set_title("TY 5-minute — equity-return % per trade",
+    axes[1].set_title("TY 5-minute - equity-return % per trade",
                       color=COL_NAVY, fontsize=12, loc="left")
     axes[1].set_xlabel("PnL / $100k × 100%")
     axes[1].set_ylabel("Trade count")
@@ -676,7 +676,7 @@ def fig_17_parity_compare():
         col_headers=["1m |Δ profit|/profit", "5m |Δ profit|/profit",
                      "1m |Δ MaxDD|/MaxDD", "5m |Δ MaxDD|/MaxDD",
                      "1m within 10%", "5m within 10%"],
-        title="TY 1-minute vs 5-minute — Python ↔ C++ parity errors",
+        title="TY 1-minute vs 5-minute - Python ↔ C++ parity errors",
         source="Sources: results_py_ty_1m/python_cpp_fidelity_comparison.csv  +  results_compare/TY_5m/",
         name="17_parity_compare_1m_vs_5m.png",
         figsize=(13.5, 5.5),
