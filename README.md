@@ -50,9 +50,9 @@ Python and C++ engines cross-validated to float-64 precision on all 6 run config
 - TY: rho = +0.59 at 18 sessions (p=0.056) - multi-week trend-following signal
 - BTC: rho = -0.38 at 1 day (mean-reverting); rho = +0.67 at 12 days (p=0.023, trend)
 
-These diagnostics justify why the walk-forward selects different L values:
-- TY: `L* ~= 1,920` bars (~24 trading days)
-- BTC: `L* in {276, 1,104}` (~1-4 trading days)
+The optimiser reflects this:
+- TY: `L* ~= 1,920` (~24 days)
+- BTC: `L* in {276, 1,104}` (~1-4 days)
 
 ---
 
@@ -67,7 +67,7 @@ These diagnostics justify why the walk-forward selects different L values:
 | BTC | Sharpe | 4.02 | 3.01 | 0.75x |
 | BTC | RoA | 27.61x | 4.07x | 0.15x* |
 
-*BTC RoA decay is a MaxDD artefact: the 2024-25 bull run created larger drawdowns OOS than anything in the IS window. Net profit and Sharpe decay at a healthy 0.72-0.75x.
+*BTC RoA decay driven by a much larger OOS MaxDD (2024-25 bull run). Net profit and Sharpe decay at a normal 0.72-0.75x.
 
 ---
 
