@@ -2,7 +2,7 @@
 
 **Group 1 - Columbia MAFN - Spring 2026**
 
-Channel WithDDControl trend-following on TY (10-year US Treasury futures) and BTC (CME Bitcoin futures), with full walk-forward optimisation, Lo-MacKinlay variance-ratio diagnostics, push-response diagnostics, and a Python/C++ parity-tested engine.
+Channel WithDDControl trend-following on TY (10-year US Treasury futures) and BTC (CME Bitcoin futures). Walk-forward validated, dual-engine cross-checked, diagnostics-first.
 
 > **Full write-up:** [`report/FINAL_REPORT.md`](report/FINAL_REPORT.md)
 > **Presentation:** [`report/5360-Presentation-FIN.pdf`](report/5360-Presentation-FIN.pdf)
@@ -11,59 +11,63 @@ Channel WithDDControl trend-following on TY (10-year US Treasury futures) and BT
 
 ## Out-of-sample walk-forward results
 
-| | TY 5-min (1987-2026) | BTC 5-min (2018-2026) | TY 1-min (extension) |
+| | TY 5-min (1987-2026) | BTC 5-min (2023-2026) | TY 1-min (extension) |
 |---|---:|---:|---:|
 | Net profit | $68,336 | $536,397 | $71,952 |
 | Max drawdown | $15,865 | $131,729 | $15,603 |
 | Return on Account | **4.31x** | **4.07x** | **4.61x** |
-| Sharpe ratio | 0.31 | 3.01 | - |
-| Closed trades | 395 | 1,094 | - |
-| Win rate | 33.2% | 42.0% | - |
-| Profit factor | 0.70 | 1.37 | - |
+| Sharpe ratio | 0.31 | 3.01 | 0.30 |
+| Closed trades | 395 | 1,094 | 401 |
+| Win rate | 33.2% | 42.0% | 32.9% |
 
-RoA = Net Profit / |Max Drawdown|. All figures are OOS walk-forward only (no in-sample leakage).
+RoA = Net Profit / |Max Drawdown|. All figures are OOS walk-forward only (no IS leakage).
 
-Walk-forward configuration: `T = 4 yr` in-sample, `tau = 1 quarter` OOS step, grid search over `ChnLen in [500, 10000]` step 10 and `StpPct in [0.005, 0.10]` step 0.001 (91,296 points), objective = Net Profit / |Max Drawdown|.
+Walk-forward: T=4yr IS, tau=1Q OOS, full grid over ChnLen in [500, 10000] step 10 and StpPct in [0.005, 0.10] step 0.001 (91,296 pts per window). Objective = Net Profit / |Max Drawdown|.
 
 ---
 
 ## Strategy
 
-**Channel WithDDControl** - a rolling high/low channel breakout with a per-trade trailing-extreme drawdown stop.
+**Channel WithDDControl** - rolling high/low channel breakout with a per-trade trailing-extreme drawdown stop.
 
 - **Entry:** Long if `Close > max(High[1..L])`; Short if `Close < min(Low[1..L])`
 - **Stop:** Exit long if `Low <= trade_high * (1 - S)`; exit short if `High >= trade_low * (1 + S)`
-- **Parameters:** `ChnLen` (L) controls the lookback; `StpPct` (S) controls the stop tightness
-- **PnL:** `price_change * point_value - slippage_per_round_turn`
+- **Stop is trade-level trailing:** benchmark is the highest High (longs) or lowest Low (shorts) seen since entry, not an account equity HWM
+- **Parameters:** ChnLen (L) controls lookback; StpPct (S) controls stop tightness
+- **PnL:** `price_change * point_value - slippage_round_turn`
 
-Python and C++ engines are cross-validated to float-64 precision across all 6 run configurations (see `results/walkforward/python_cpp_fidelity_comparison.csv`).
+Python and C++ engines cross-validated to float-64 precision on all 6 run configurations (`results/walkforward/python_cpp_fidelity_comparison.csv`).
 
 ---
 
-## Statistical diagnostics
+## Diagnostic findings
 
 **Variance-ratio test (Lo-MacKinlay):**
-- TY: near-random-walk at fine granularity; positive deviation from 1 at longer horizons
-- BTC: stronger short-horizon deviations; trend-following signal at multi-day scales
+- TY: near-random-walk at all horizons; mild VR < 1 from bid-ask bounce at 5-min
+- BTC: stronger short-horizon mean reversion; VR re-rises at multi-week scales
 
-**Push-response test:**
-- TY: weak continuation at medium horizons (18-24 sessions); primary trend-following horizon
-- BTC: short-horizon reversal, trend-following signal at approximately 12 days
+**Push-Response test:**
+- TY: rho = +0.59 at 18 sessions (p=0.056) - multi-week trend-following signal
+- BTC: rho = -0.38 at 1 day (mean-reverting); rho = +0.67 at 12 days (p=0.023, trend)
 
-These diagnostics justify parameter selection: TY converges to `L* ~= 1920` (~24 sessions), BTC to `L* in {276, 1104}` (~1-4 days).
+These diagnostics justify why the walk-forward selects different L values:
+- TY: `L* ~= 1,920` bars (~24 trading days)
+- BTC: `L* in {276, 1,104}` (~1-4 trading days)
 
 ---
 
 ## IS vs OOS decay
 
-| Market | Metric | Full-sample IS | Walk-forward OOS | Decay ratio |
+| Market | Metric | Full-sample IS (C++ ref) | Walk-forward OOS | Decay |
 |---|---|---:|---:|---:|
-| TY | RoA | ~7.1x | 4.31x | 0.61x |
-| TY | Sharpe | ~0.55 | 0.31 | 0.56x |
-| BTC | RoA | ~6.1x | 4.07x | 0.67x |
-| BTC | Sharpe | ~4.5 | 3.01 | 0.67x |
+| TY | Net profit | $89,465 | $68,336 | 0.76x |
+| TY | Sharpe | 0.41 | 0.31 | 0.76x |
+| TY | RoA | 4.73x | 4.31x | 0.91x |
+| BTC | Net profit | $744,674 | $536,397 | 0.72x |
+| BTC | Sharpe | 4.02 | 3.01 | 0.75x |
+| BTC | RoA | 27.61x | 4.07x | 0.15x* |
 
-Decay of 0.6-0.7x is consistent with genuine but partially overfitted in-sample performance.
+*BTC RoA decay is a MaxDD artefact: the 2024-25 bull run created larger drawdowns OOS than anything in the IS window. Net profit and Sharpe decay at a healthy 0.72-0.75x.
 
 ---
 
@@ -78,8 +82,8 @@ Decay of 0.6-0.7x is consistent with genuine but partially overfitted in-sample 
 |   +-- diagnostics.py          # Variance-ratio + Push-Response tests
 |   +-- strategies.py           # Channel WithDDControl + per-trade ledger
 |   +-- walkforward.py          # 4yr/1Q walk-forward driver
-|   +-- metrics.py              # Sharpe + Chekhlov drawdown family
-|   +-- reference_backtest.py   # Matlab-parity reference split
+|   +-- metrics.py              # Sharpe, RoA, Chekhlov drawdown family
+|   +-- reference_backtest.py   # Matlab-parity 70/30 split reference run
 |   +-- workflow.py             # end-to-end pipeline runner
 +-- cpp/                        # C++17 reference engine
 |   +-- tf_backtest_treasury_btc.cpp
@@ -96,11 +100,11 @@ Decay of 0.6-0.7x is consistent with genuine but partially overfitted in-sample 
 |   +-- cpp_parity/             # C++ reference artifacts + parity comparison CSV
 |   +-- diagnostics/            # VR and push-response cached tables
 +-- report/
-|   +-- FINAL_REPORT.md         # comprehensive 16-section write-up with figures
-|   +-- 5360-Presentation-FIN.pdf   # final submitted presentation (PDF)
+|   +-- FINAL_REPORT.md         # comprehensive 18-section write-up with all figures
+|   +-- 5360-Presentation-FIN.pdf    # final submitted presentation (PDF)
 |   +-- 5360-Presentation-FIN.pptx  # final submitted presentation (source)
-|   +-- figures/                # Columbia-themed PNGs for report
-|   +-- presentation/           # presentation figure assets
+|   +-- figures/                # Columbia-themed PNGs for report body
+|   +-- presentation/figures/   # full figure set (front_*, repl_*, slide_*)
 +-- README.md
 ```
 
@@ -109,7 +113,7 @@ Decay of 0.6-0.7x is consistent with genuine but partially overfitted in-sample 
 ## How to reproduce
 
 ```bash
-# 1. Build C++ engine (requires CMake 3.15+, C++17 compiler)
+# 1. Build C++ engine (requires CMake 3.15+, C++17)
 cmake -S cpp -B cpp/build && cmake --build cpp/build -j
 ./cpp/build/tf_backtest_treasury_btc --mode both --markets TY BTC --bars 5
 
@@ -121,12 +125,12 @@ python scripts/replay_cpp_fidelity_in_python.py
 python scripts/build_python_corrected_summary.py
 # -> results/walkforward/python_cpp_fidelity_comparison.csv
 
-# 4. Render report figures (Columbia color scheme)
+# 4. Render all report and presentation figures
 python scripts/build_final_report_figures.py
 python scripts/build_front_matter_figures.py
+python scripts/build_presentation_figures.py
+python scripts/build_diagnostic_replicas.py
 ```
-
-Full narrative is in [`report/FINAL_REPORT.md`](report/FINAL_REPORT.md) with all figures and methodology.
 
 ---
 
